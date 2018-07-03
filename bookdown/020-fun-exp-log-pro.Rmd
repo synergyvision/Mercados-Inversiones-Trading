@@ -25,7 +25,7 @@ vi) $a^mb^m=(ab)^m$
 vii) $\frac{a^m}{b^m}=\left(\frac{a}{b}\right)^m$
 
 Hay dos bases que son las más frecuentadas: cuando $b=e=2.718281828$ y cuando0 $b=10$. Estas se denotan $e^x$ y $10^x$.
-La función exponencial tiene una fórmula general:$\mathbf{y=Ab^{ax}}$, siendo $A$ y $a$ constantes y $b$ la $\textbf{base}$. Tomando en cuenta que en la mayoría de las veces no se conoce la base de la función, se debe hacer una regresión para hallar la funcióin; la funcion toma la forma $\mathbf{y=Ab^x}$, donde $A$ es un coeficiente y $b$ es la base.
+La función exponencial tiene una fórmula general:$\mathbf{y=Ab^{ax}}$, siendo $A$ y $a$ constantes y $b$ la **base**. Tomando en cuenta que en la mayoría de las veces no se conoce la base de la función, se debe hacer una regresión para hallar la funcióin; la funcion toma la forma $\mathbf{y=Ab^x}$, donde $A$ es un coeficiente y $b$ es la base.
 
 ```{example, label=exm2-1}
 
@@ -108,4 +108,30 @@ $1+r=(3.00671)^{\frac{1}{32}}=1.035$
 Por tanto:
 
 $r=0.035$
+
+Aplicando la raíz once en ambos miembros llegamos a: 
+$r=0.0278$ aproximadamente
+```
+
+En muchos casos se debe proyectar hacia el futuro basándose en al historia de valores de dicha variable. Esto se conoce como **regresión exponencial**, que se trata de cursos de estadística.
+
+```{example, label=exm2-4}
+
+Supongamos que la población de un país ha tenido la siguiente variación de población como se muestra en la tabla uno, en los últimos cinco años.
+
+Hallar la función exponencial que más se ajuste a los datos anteriores y determinar en qué porcentaje ha aumentado la población anualmente.
+
+*Solución*
+
+Para facilitar el manejo de los datos anteriores, llamaremos uno al año 1994, dos a 1995 y así sucesivamente; y utilizaremos el programa correspondiente para hallar una función de la forma:
+
+$Y=ab^x$
+
+donde x es el año e Y el número de habitantes. Se trata de hallar los valores de a y b. Ejecutando en la calculadora la regresión exponencial anterior, obtenemos:
+
+```
+
+```{r}
+x<-c(1994,1995,1996,1997,1998)
+
 ```
