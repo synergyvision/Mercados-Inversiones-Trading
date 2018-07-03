@@ -8,9 +8,7 @@ Dado un número real positivo $b$, se llama función exponencial en la base $b$ 
 como $f(x) = b^x$.
 ```
 
-En este caso la variable independiente $x$ se llama exponente, y la constante $b$, base. El dominio de la
-función exponencial es $(−\infty, \infty)$, y el recorrido es $(0, \infty)$. Las propiedades de la función exponencial son
-las siguientes: para $b$ > 0, $a$ > 0 y todo $m$ y $n$, números reales.
+En este caso la variable independiente $x$ se llama exponente, y la constante $b$, base. El dominio de la función exponencial es $(−\infty, \infty)$, y el recorrido es $(0, \infty)$. Las propiedades de la función exponencial son las siguientes: para $b$ > 0, $a$ > 0 y todo $m$ y $n$, números reales.
 
 i) $b^m>0$
 
@@ -27,14 +25,14 @@ vi) $a^mb^m=(ab)^m$
 vii) $\frac{a^m}{b^m}=\left(\frac{a}{b}\right)^m$
 
 Hay dos bases que son las más frecuentadas: cuando $b=e=2.718281828$ y cuando0 $b=10$. Estas se denotan $e^x$ y $10^x$.
-La función exponencial tiene una fórmula general:$\mathbf{y=Ab^{ax}}$, siendo $A$ y $a$ constantes y $b$ la __base__. Tomando en cuenta que en la mayoría de las veces no se conoce la base de la función, se debe hacer una regresión para hallar la funcióin; la funcion toma la forma $\mathbf{y=Ab^x}$, donde $A$ es un coeficiente y $b$ es la base.
+La función exponencial tiene una fórmula general:$\mathbf{y=Ab^{ax}}$, siendo $A$ y $a$ constantes y $b$ la $\textbf{base}$. Tomando en cuenta que en la mayoría de las veces no se conoce la base de la función, se debe hacer una regresión para hallar la funcióin; la funcion toma la forma $\mathbf{y=Ab^x}$, donde $A$ es un coeficiente y $b$ es la base.
 
-```{example, label=exm2.1}
+```{example, label=exm2-1}
 
 Las ganancias de una empresa en 1998 fueron \$ 500 millones, y en el 2005, \$ 630 millones. Si las ganancias
 de esa empresa crecen exponencialmente, estimar las ganancias para el 2008.
 
-**Solución**
+*Solución*
 
 Sea $G(t)$ la función de ganancias que depende del tiempo $t$ en años. Esta función tendrá la forma:
 $\mathbf{G(t) = ke^{at}}$, donde $k$ y $a$ son constantes cuyos valores deben determinarse con base en los valores conocidos de la función.
@@ -54,11 +52,60 @@ Así que $e^{7a}=\frac{63}{50}$, de tal manera que:
 $G(20)=500e^{20a}=500(e^{7a})^\frac{20}{7}=500(\frac{63}{50})^\frac{20}{7}=967.700$ millones de pesos, y estas serán las utilidades estimadas o proyectadas para el 2008.
 ```
 
-```{example, label=exm2.2}
+```{example, label=exm2-2}
 Se sabe que la población de una ciudad está dada (en millones de habitantes) por la expresión siguiente:
 $(t) = 2e^{0,15t}$
 donde $t$ está dada en años, desde 1986
+
 Determinar:
+
 a) La población proyectada para el 2006.
+
 b) El crecimiento porcentual de la población cada año.
+
+*Solución*
+
+a) Para determinar la población proyectada para el 2006, simplemente calculamos la función en $t=20$(tomando 1886 como el año cero); entonces: 
+
+$P(20)=2e^{0.15(20)}=40.170$
+
+b) Del cálculo diferencial se sabe que la variación porcentual de una función f(x) está dada por:
+
+$\Delta\%=\frac{f'(x)}{f(x)}\times 100$
+
+Por tanto, para nuestro caso tenemos:
+
+$\Delta\%=\frac{p'(t)}{p(t)}\times 100=\frac{0.3e^{0.15t}}{2e^{0.15t}}\times 100=0.15\times 100=15\%$
+
+que corresponde al coeficiente del exponente de la función dada.
+```
+
+Cuando una cantidad sube periódicamente el mismo porcentaje es común dentro de las mateáaticas financieras. Supongamos que se inicia con una cantidad $P$ y que en cada período $t$ se sucede un aumento de $r\%$ sobre el valor inmediatamente anterios; entonces se formaría la siguiente sucesión de valores:
+
+$$
+\begin{array}{ll}
+t=0\quad\quad P\\
+t=1\quad\quad P+rP=P(1+r)\\
+t=2\quad\quad P(1+r)+rP(1+r)=P(1+r)^2\\
+t=3\quad\quad P(1+r)^2+rP(1+r)=P(1+r)^3
+\end{array}
+$$
+
+Y así sucesivamente hasta llegar en un tiempo $t$ cualquiera a un valor de $P(1 + r)t$. Esta función exponencial en la base $(1 + r)$ se utilizará más adelante en el manejo del interés compuesto, y será determinada en el capítulo 3.
+
+```{example, label=exm2-3}
+
+Hallar el valor de $r$ tal que: 
+
+$300.671=100.000(1+r)^{32}$
+
+*Solución*
+
+La expresión dada equivale a $(1+r)^{32}=3.00671$. Tomando la raíz de treinta y dos en ambos lados obtenemos:
+
+$1+r=(3.00671)^{\frac{1}{32}}=1.035$
+
+Por tanto:
+
+$r=0.035$
 ```
