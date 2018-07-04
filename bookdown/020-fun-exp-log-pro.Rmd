@@ -31,8 +31,9 @@ La función exponencial tiene una fórmula general:$\mathbf{y=Ab^{ax}}$, siendo 
 
 Las ganancias de una empresa en 1998 fueron \$ 500 millones, y en el 2005, \$ 630 millones. Si las ganancias
 de esa empresa crecen exponencialmente, estimar las ganancias para el 2008.
+```
 
-*Solución*
+```{solution, label=sol2-1}
 
 Sea $G(t)$ la función de ganancias que depende del tiempo $t$ en años. Esta función tendrá la forma:
 $\mathbf{G(t) = ke^{at}}$, donde $k$ y $a$ son constantes cuyos valores deben determinarse con base en los valores conocidos de la función.
@@ -62,8 +63,9 @@ Determinar:
 a) La población proyectada para el 2006.
 
 b) El crecimiento porcentual de la población cada año.
+```
 
-*Solución*
+```{solution, label=sol2-2}
 
 a) Para determinar la población proyectada para el 2006, simplemente calculamos la función en $t=20$(tomando 1886 como el año cero); entonces: 
 
@@ -98,8 +100,9 @@ Y así sucesivamente hasta llegar en un tiempo $t$ cualquiera a un valor de $P(1
 Hallar el valor de $r$ tal que: 
 
 $300.671=100.000(1+r)^{32}$
+```
 
-*Solución*
+```{solution, label=sol2-3}
 
 La expresión dada equivale a $(1+r)^{32}=3.00671$. Tomando la raíz de treinta y dos en ambos lados obtenemos:
 
@@ -120,18 +123,34 @@ En muchos casos se debe proyectar hacia el futuro basándose en al historia de v
 Supongamos que la población de un país ha tenido la siguiente variación de población como se muestra en la tabla uno, en los últimos cinco años.
 
 Hallar la función exponencial que más se ajuste a los datos anteriores y determinar en qué porcentaje ha aumentado la población anualmente.
+```
 
-*Solución*
-
+```{solution, label=2-4}
 Para facilitar el manejo de los datos anteriores, llamaremos uno al año 1994, dos a 1995 y así sucesivamente; y utilizaremos el programa correspondiente para hallar una función de la forma:
 
 $Y=ab^x$
 
 donde x es el año e Y el número de habitantes. Se trata de hallar los valores de a y b. Ejecutando en la calculadora la regresión exponencial anterior, obtenemos:
-
 ```
 
-```{r}
-x<-c(1994,1995,1996,1997,1998)
 
+
+```{r, warning=FALSE}
+x<-seq(1,5)
+y<-c(22,23,25.6,28.6,32)
+data<-data.frame(x,y)
+model<-nls(y~a*b^x, data = data)
+coef(model)
 ```
+Así, la función exponencial que más se ajusta a los datos dados es la siguiente:
+
+$Y=19,44256059(1,101562846)^x$
+
+La población habrá aumentado cada año en aproximadamente el $10,156%$.
+
+Se deberá manejar cualquiera de los programas y métodos de la tecnología para calcular regresiones (lineales y exponenciales), porque se utilizará en el futuro para estimar tendencias de flujo de caja.
+
+## Función Logarítmica
+
+
+
