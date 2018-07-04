@@ -146,9 +146,10 @@ Así, la función exponencial que más se ajusta a los datos dados es la siguien
 
 $Y=19,44256059(1,101562846)^x$
 
-La población habrá aumentado cada año en aproximadamente el $10,156%$.
+La población habrá aumentado cada año en aproximadamente el $10,156\%$.
 
 Se deberá manejar cualquiera de los programas y métodos de la tecnología para calcular regresiones (lineales y exponenciales), porque se utilizará en el futuro para estimar tendencias de flujo de caja.
+
 
 ## Función Logarítmica
 
