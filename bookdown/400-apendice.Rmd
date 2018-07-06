@@ -92,5 +92,5 @@ LaTeX distributions and packages are also updated from time to time, and you may
 system = function(...) cat(base::system(..., intern = TRUE), sep = '\n')
 ```
 ```{r collapse=TRUE}
-#system('pdflatex --version')
+system('pdflatex --version')
 ```
