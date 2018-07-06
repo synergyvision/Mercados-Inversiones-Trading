@@ -247,7 +247,7 @@ Se deberá manejar cualquiera de los programas y métodos de la tecnología para
 ## Función Logarítmica
 
 ```{definition, label=funlogaritmica}
-Dado un número real positivo $b$, se llama función logarítmica en la base $b$ y se denota $logb(y)$, a la función inversa de $\mathbf{y = b^x}$.
+Dado un número real positivo $b$, se llama función logarítmica en la base $b$ y se denota $log_b(y)$, a la función inversa de $\mathbf{y = b^x}$.
 ```
 
 De esta manera, las funciones exponencial y logarítmica son inversas entre sī. El dominio de las función logarītmica es $(0,\infty)$ , y el recorrido, $(-\infty, \infty)$.
@@ -323,7 +323,46 @@ b) En este caso\ $V=\$6.065,3$\ representa el valor de la máquina de $t$ años,
   Es decir, $t=cinco años$ es la respuesta a la pregunta del literal $(b)$ de este ejemplo.
 ```
 
-```{r}
+Para la programación en R debemos, a mano, despejar la $t$ de la ecuación anterior.
 
+$$
+\begin{array}{rl}
+10000*exp(-0.1*t)&=v\\
+exp(-0.1*t)&=\frac{v}{10000}\\
+-0.1*t&=log(\frac{v}{10000})\\
+t&=-(\frac{log(\frac{v}{10000})}{0.1})
+\end{array}
+$$
+```{r}
+funsol2_6_2<-function(v){ #Se escribe la función para ser evaluada en v.
+  -(log(v/(10000))/0.1)
+}
+round(funsol2_6_2(6065.3), digits=0) #Se usa el round() para redondear el resultado a 0 decimales.
 ```
 
+```{example, label=2-7}
+La expresión $3.000 [(1 + 0,02)n − 1]/0,02$ representa, como lo veremos en el capítulo 4, el valor total acumulado después de realizar n depósitos de $3.000$ cada uno en una cuenta de ahorros que paga un interés del 2% mensual. Si el total acumulado asciende a $96.090,9$ ¿cuántos depósitos se han realizado?
+```
+
+```{solution, label=sol2-7}
+Tenemos que:
+$96.090,9 = 3.000 [(1,02)n − 1] \frac{1}{0,02}$ 
+  
+O sea:
+  
+$(1,02)n = 1,640606$
+
+Tomando el logaritmo natural en ambos miembros de la igualdad obtenemos:
+  
+$Ln(1,02)n = ln(1,640606)$
+  
+Por la relación (1−2):
+  
+$n\times ln(1,02) = ln(1,640606)$
+  
+de donde:
+  
+$n = \frac{ln(1,640606 )}{ln(1,02)} = 25$
+  
+Es decir, después de veinticinco depósitos de \$ 3.000 cada uno tendremos la suma de \$ 96.090,9, según las condiciones del ejemplo.
+```
