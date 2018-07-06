@@ -3,7 +3,6 @@
 ## Función exponencial
 
 ```{definition, label=funexponencial}
-
 Dado un número real positivo $b$, se llama función exponencial en la base $b$ a la función expresada
 como $f(x) = b^x$.
 ```
@@ -24,7 +23,7 @@ vi) $a^mb^m=(ab)^m$
 
 vii) $\frac{a^m}{b^m}=\left(\frac{a}{b}\right)^m$
 
-Hay dos bases que son las más frecuentadas: cuando $b=e=2.718281828$ y cuando0 $b=10$. Estas se denotan $e^x$ y $10^x$.
+Hay dos bases que son las más frecuentadas: cuando $b=e=2.718281828$ y cuando $b=10$. Estas se denotan $e^x$ y $10^x$.
 La función exponencial tiene una fórmula general:$\mathbf{y=Ab^{ax}}$, siendo $A$ y $a$ constantes y $b$ la **base**. Tomando en cuenta que en la mayoría de las veces no se conoce la base de la función, se debe hacer una regresión para hallar la funcióin; la funcion toma la forma $\mathbf{y=Ab^x}$, donde $A$ es un coeficiente y $b$ es la base.
 
 ```{example, label=exm2-1}
@@ -53,6 +52,26 @@ Así que $e^{7a}=\frac{63}{50}$, de tal manera que:
 $G(20)=500e^{20a}=500(e^{7a})^\frac{20}{7}=500(\frac{63}{50})^\frac{20}{7}=967.700$ millones de pesos, y estas serán las utilidades estimadas o proyectadas para el 2008.
 ```
 
+En R:
+
+Para la programación en R de dicha operación, se pueden generar funciones. En este case, se les presentará dos maneras de hacerlo:
+
+1) Escribir una función donde solo se requiera asignar los valores a las variables:
+```{r}
+funsol2_1_1<-function(t,a,k){ #Se le asigna un nombre, se le indica que es una función y se escribe la operación.
+  k*exp(a*t)
+}
+funsol2_1_1(20,log(63/50)/7,500) #Se le indican los valores a éstas.
+```
+2) Escribir una función donde la variable sea el tiempo.
+```{r}
+funsol2_1_2<-function(t){ #Se escribe en función de t.
+  a<-log(63/50)/7 #Se le asigna el valor previamente adquirido del despeje a su respectiva variable.
+  500*exp(a*t)
+}
+funsol2_1_2(20) #Dependiendo del tiempo asignado, se obtiene el resultado de las ganancias. Se puede probar con 7 o con 0.
+```
+
 ```{example, label=exm2-2}
 Se sabe que la población de una ciudad está dada (en millones de habitantes) por la expresión siguiente:
 $(t) = 2e^{0,15t}$
@@ -70,7 +89,19 @@ b) El crecimiento porcentual de la población cada año.
 a) Para determinar la población proyectada para el 2006, simplemente calculamos la función en $t=20$(tomando 1886 como el año cero); entonces: 
 
 $P(20)=2e^{0.15(20)}=40.170$
+```
 
+Para la programación en R de dicha operación, se puede generar una función.
+```{r}
+funsol2_2_1<-function(t){ #Se escribe en función de t.
+  a<-0.15 #Se le asignan sus respectivos valores a sus respectivas variables.
+  k<-2
+  k*exp(a*t) 
+}
+funsol2_2_1(20) #Se le asigna el valor a la variable.
+```
+
+```{solution}
 b) Del cálculo diferencial se sabe que la variación porcentual de una función f(x) está dada por:
 
 $\Delta\%=\frac{f'(x)}{f(x)}\times 100$
@@ -80,6 +111,34 @@ Por tanto, para nuestro caso tenemos:
 $\Delta\%=\frac{p'(t)}{p(t)}\times 100=\frac{0.3e^{0.15t}}{2e^{0.15t}}\times 100=0.15\times 100=15\%$
 
 que corresponde al coeficiente del exponente de la función dada.
+```
+
+Para la programación en R debemos primero, a mano, calcular el valor de la derivada de P'(t).
+
+$$
+\begin{array}{ll}
+P'(t)&=2'e^{0.15t}+2e(^{0.15t})'\\
+
+&=0(e^{0.15t})+2(e^{0.15t}\times 0.15)\\
+
+&=2\times 0.15\times e^{0.15t}\\
+
+P'(t)&=0.3e^{0.15t}
+\end{array}
+$$
+
+Una vez obtenido el valor de la derivada, se escribe una función, evaluada en t
+```{r}
+P<-function(t){ #Se escriben dos funciones, para luego "llamarlas" en la funsol2_2_2, para obtener el resultado.
+  2*exp(0.15*t)
+}
+DP<-function(t){
+  0.3*exp(0.15*t)
+}
+funsol2_2_2<-function(t){
+  (DP(t)/P(t))*100
+}
+paste0(funsol2_2_2(1),"%") #La función paste es para comentar el valor obtenido con el porcentaje (%) al lado.
 ```
 
 Cuando una cantidad sube periódicamente el mismo porcentaje es común dentro de las mateáaticas financieras. Supongamos que se inicia con una cantidad $P$ y que en cada período $t$ se sucede un aumento de $r\%$ sobre el valor inmediatamente anterios; entonces se formaría la siguiente sucesión de valores:
@@ -116,24 +175,58 @@ Aplicando la raíz once en ambos miembros llegamos a:
 $r=0.0278$ aproximadamente
 ```
 
-En muchos casos se debe proyectar hacia el futuro basándose en al historia de valores de dicha variable. Esto se conoce como **regresión exponencial**, que se trata de cursos de estadística.
+En R:
+
+```{r}
+funsol2_3_1<-function(){
+  
+  (3.00671)^{1/32}-1 #Resultado del despeje de r.
+}
+round(funsol2_3_1(), digits=3) #La función round() se utiliza para redondear a la cantidad de digitos deseados.
+```
 
 ```{example, label=exm2-4}
+Para qué valor r se cumplirá la siguiente igualdad:
+  
+$630.000(1+r)^{15}=465.957(1+r)^{26}$
+```
+
+```{solution, label=sol2-4}
+La igualdad es equivalente a:
+  
+$\frac{630.000}{465.957}=\frac{(1+r)^{26}}{(1+r)^{15}}$
+  
+O sea:
+  
+$1.35056=(1+r)^1$
+```
+
+En R:
+
+```{r}
+funsol2_4_1<-function(){
+  
+  (1.35056)^{1/11}-1
+}
+paste0(funsol2_4_1(), " aproximadamente") #La función paste es para comentar el valor obtenido con el "aproximadamente"
+```
+
+En muchos casos se debe proyectar hacia el futuro basándose en al historia de valores de dicha variable. Esto se conoce como **regresión exponencial**, que se trata de cursos de estadística.
+
+```{example, label=exm2-5}
 
 Supongamos que la población de un país ha tenido la siguiente variación de población como se muestra en la tabla uno, en los últimos cinco años.
 
 Hallar la función exponencial que más se ajuste a los datos anteriores y determinar en qué porcentaje ha aumentado la población anualmente.
 ```
 
-```{solution, label=2-4}
+```{solution, label=sol2-5}
 Para facilitar el manejo de los datos anteriores, llamaremos uno al año 1994, dos a 1995 y así sucesivamente; y utilizaremos el programa correspondiente para hallar una función de la forma:
 
 $Y=ab^x$
 
 donde x es el año e Y el número de habitantes. Se trata de hallar los valores de a y b. Ejecutando en la calculadora la regresión exponencial anterior, obtenemos:
 ```
-
-
 
 ```{r, warning=FALSE}
 x<-seq(1,5)
@@ -142,6 +235,7 @@ data<-data.frame(x,y)
 model<-nls(y~a*b^x, data = data)
 coef(model)
 ```
+
 Así, la función exponencial que más se ajusta a los datos dados es la siguiente:
 
 $Y=19,44256059(1,101562846)^x$
@@ -150,8 +244,86 @@ La población habrá aumentado cada año en aproximadamente el $10,156\%$.
 
 Se deberá manejar cualquiera de los programas y métodos de la tecnología para calcular regresiones (lineales y exponenciales), porque se utilizará en el futuro para estimar tendencias de flujo de caja.
 
-
 ## Función Logarítmica
 
+```{definition, label=funlogaritmica}
+Dado un número real positivo $b$, se llama función logarítmica en la base $b$ y se denota $logb(y)$, a la función inversa de $\mathbf{y = b^x}$.
+```
 
+De esta manera, las funciones exponencial y logarítmica son inversas entre sī. El dominio de las función logarītmica es $(0,\infty)$ , y el recorrido, $(-\infty, \infty)$.
+
+Para las dos bases anotadas anteriormente, las funciones logarītmicas se denotan asī" $ln$ si la base es $e$, y se llama logarītmo natural; o neperiano, y log si es de $base=10$.
+
+Las **propiedades de la función logarītmica**, expresadas para el logaritmo natural, son las siguientes, para $\mathbf(M)$ Y $\mathbf(N)$.
+
+i) $ln(M\times N)=lnM+lnN$
+
+ii) $ln\frac{M}{N}=$
+
+iii) $ln\ M^r=r\ ln\ M$
+
+iv) $ln\ 1=0$
+
+v) $ln\ e=1$
+
+Del hecho de ser inversas se desprenden algunas relaciones fundamentales entre ellas:
+
+i) $y=e^x\longleftrightarrow x\ =\ ln\ y$
+
+ii) $e^{1nt}=t$
+
+iii) $ln\ e^u=u$
+
+Sabiendo esto, desarrollemos algunos ejemplos (ayúdense con la calculadora):
+
+```{example, label= exm2-6}
+El precio de venta o de mercado de una maquinaria puede expresarse como: $V = \$10.000 e^{−0,1t}$
+donde $t$ es el tiempo de antigüedad de la máquina medido en años.
+
+Preguntas:
+  
+a) ¿cuál será el valor de la máquina al cabo de ocho años?; y,
+
+b) ¿en qué momento la máquina tendrá un valor de venta de \$ 6.053,3?
+```
+
+```{solution, label= sol2-6}
+
+a) El valor de la máquina al cabo de ocho años estará dado por:
+  
+  $V(8)=\$10.000e^{-0,1(8)}=\$4.493,3$
+```
+
+En R:
+
+```{r}
+funsol2_6_1<-function(t){
+  10000*exp(-0.1*t)
+}
+paste(funsol2_6_1(8), "$")
+```
+
+```{solution}    
+b) En este caso\ $V=\$6.065,3$\ representa el valor de la máquina de $t$ años, de tal manera que al reemplazar este valor en la función de valor de la máquina se tiene:
+  
+  $6.065,3=10.000e^{-0,1t}$
+  
+  o sea:
+    
+  $e^{-0,1t}=0,060653$
+  
+  tomando el logaritmo natural en ambos miembros de la igualdad obtenemos:
+    
+  $Ln\ e^{-0,01}=ln(0,60653)$
+    
+  Y aplicando la relación (1-3) al miembro de la izquierda de esta igualdad, se llega a:
+  
+  $-0,1t=-0,5$
+      
+  Es decir, $t=cinco años$ es la respuesta a la pregunta del literal $(b)$ de este ejemplo.
+```
+
+```{r}
+
+```
 
