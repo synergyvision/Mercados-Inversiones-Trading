@@ -250,11 +250,11 @@ Se deberá manejar cualquiera de los programas y métodos de la tecnología para
 Dado un número real positivo $b$, se llama función logarítmica en la base $b$ y se denota $log_b(y)$, a la función inversa de $\mathbf{y = b^x}$.
 ```
 
-De esta manera, las funciones exponencial y logarítmica son inversas entre sī. El dominio de las función logarītmica es $(0,\infty)$ , y el recorrido, $(-\infty, \infty)$.
+De esta manera, las funciones exponencial y logarítmica son inversas entre sí. El dominio de las función logarítmica es $(0,\infty)$ , y el recorrido, $(-\infty, \infty)$.
 
-Para las dos bases anotadas anteriormente, las funciones logarītmicas se denotan asī" $ln$ si la base es $e$, y se llama logarītmo natural; o neperiano, y log si es de $base=10$.
+Para las dos bases anotadas anteriormente, las funciones logaritmicas se denotan así $ln$\ si la base es $e$, y se llama logarítmo natural o neperiano; y log si es de $base=10$.
 
-Las **propiedades de la función logarītmica**, expresadas para el logaritmo natural, son las siguientes, para $\mathbf(M)$ Y $\mathbf(N)$.
+Las **propiedades de la función logarítmica**, expresadas para el logaritmo natural, son las siguientes, para $\mathbf(M)$ Y $\mathbf(N)$.
 
 i) $ln(M\times N)=lnM+lnN$
 
@@ -340,8 +340,8 @@ funsol2_6_2<-function(v){ #Se escribe la función para ser evaluada en v.
 round(funsol2_6_2(6065.3), digits=0) #Se usa el round() para redondear el resultado a 0 decimales.
 ```
 
-```{example, label=2-7}
-La expresión $3.000 [(1 + 0,02)n − 1]/0,02$ representa, como lo veremos en el capítulo 4, el valor total acumulado después de realizar n depósitos de $3.000$ cada uno en una cuenta de ahorros que paga un interés del 2% mensual. Si el total acumulado asciende a $96.090,9$ ¿cuántos depósitos se han realizado?
+```{example, label=exm2-7}
+La expresión $3.000\left(\frac{(1 + 0,02)n − 1}{0,02}\right)$ representa, como lo veremos en el capítulo 4, el valor total acumulado después de realizar $n$ depósitos de $3.000$ cada uno en una cuenta de ahorros que paga un interés del 2% mensual. Si el total acumulado asciende a $96.090,9$ ¿cuántos depósitos se han realizado?
 ```
 
 ```{solution, label=sol2-7}
@@ -354,7 +354,7 @@ $(1,02)n = 1,640606$
 
 Tomando el logaritmo natural en ambos miembros de la igualdad obtenemos:
   
-$Ln(1,02)n = ln(1,640606)$
+$Ln(1,02)^n = ln(1,640606)$
   
 Por la relación (1−2):
   
@@ -366,3 +366,281 @@ $n = \frac{ln(1,640606 )}{ln(1,02)} = 25$
   
 Es decir, después de veinticinco depósitos de \$ 3.000 cada uno tendremos la suma de \$ 96.090,9, según las condiciones del ejemplo.
 ```
+
+Para la programación en R debemos, a mano, despejar la $n$ de la ecuación anterior.
+
+$$
+\begin{array}{rl}
+96090.9&=3000[(1.02)6^n-1]\frac{1}{0.02}\\
+(1.02)n&=1.640606\\
+ln(1.02)^n&=ln(1.640606)]\\
+n\times ln(1.02)&=ln(1.640606)\\
+n&=\frac{ln(1.640606)}{ln(1.02)}
+\end{array}
+$$
+```{r}
+funsol2_7_1<-function(){
+  log(1.640606)/log(1.02)
+}
+funsol2_7_1()
+```
+
+```{example, label=exm2-8}
+Hallar el valor $n$ tal que: $ln(3−2n) − 2ln(n) = 0$
+```
+
+```{solution, label=sol2-8}
+  La ecuación del problema es equivalente a:
+  
+  $ln(3 − 2n) − ln(n)^2 = 0$
+
+  La cual, a su vez, podemos escribir como:
+    
+  $ln [(3 − 2n)/n^2] = 0$
+  
+  De acuerdo con otra propiedad de la función ln, la expresión anterior es equivalente a:
+    
+  $(3 − 2n)/n^2 = e^0 = 1$
+  
+  o sea que:
+    
+  $n^2 + 2n − 3 = 0$
+  
+
+  que corresponde a una ecuación de segundo grado cuyas raíces son:
+    
+  $n = 1$ y $n = −3$
+  
+  Sin embargo, la solución al problema original es solo n = 1, pues para n = −3 no existe el logaritmo. El lector debe          resolver el mismo problema utilizando otras propiedades de la función logarítmica.
+
+```
+
+Para la programación en R debemos, a mano, operar y aplicar teoría de logaritmos.
+
+$$
+\begin{array}{rl}
+ln(3-2n)-2ln(n)&=0\\
+ln\left[\frac{(3-2n)}{n^2}\right]&=0\\
+(\frac{3-2n}{n^2})&=e^0=1\\
+n^2+2n-3&=0\\
+\end{array}
+$$
+```{r}
+funsol2_8_1<-function(a,b,c){
+  (-b+sqrt(b^2-4*a*c))/2*a
+}
+funsol2_8_1(1,2,-3)
+funsol2_8_2<-function(a,b,c){
+  (-b-sqrt(b^2-4*a*c))/2*a
+}
+funsol2_8_2(1,2,-3)
+```
+
+```{example, label=exm2-9}
+Con la expresión $P\times e^{in}$ se calcula el valor total acumulado en una cuenta en la que el interés del i% se capitaliza continuamente, y $n$ es el número de años transcurridos desde el depósito de la cantidad $P$. Con base en esta expresión, hallar el número de años para que el total acumulado sea una cantidad $F$.
+```
+
+```{solution, label=sol2-9}
+Tenemos $F = P\ e^{in}$, en la cual debemos hallar el valor de $n$. Podemos escribir la ecuación anterior como:
+  
+$e^{in} = F/P$
+  
+Tomando el logaritmo natural en ambos miembros de la igualdad, tenemos:
+  
+$Lne^{in} = ln(\frac{F}{P})$
+
+De acuerdo con la expresión $(1-3)$, se tiene: 
+  
+$in = ln(\frac{F}{P})$
+  
+O sea que:
+  
+$n=(\frac{1}{i})\times ln(\frac{F}{P})$
+```
+
+
+```{example, label=exm2-10}
+La función de costos de una determinada empresa viene dada por $C(t) = 5.000 − A\ e^{bt}$ (expresado en miles de pesos), donde $A$ y $b$ son constantes y $t$ es el tiempo medido en meses. Si el costo original $(t = 0)$ fue de \$4.400.000 y el costo en el cuarto mes es de \$4.200.000, determinar el costo a los quince meses.
+```
+
+```{solution, label=sol2-10}
+Lo primero que debe hacerse es determinar la función que cumpla las condiciones expresadas en el problema, o sea, que $C(0) = 4.400$ millones y $C(4) = 4.200$ millones; para ello debe determinarse el valor de las constantes $A$ y $b$. Esto lo logramos a partir de:
+  
+$4.400 = C(0) = 5.000 – Ae^{b(0)} = 5.000 − A$
+  
+Por tanto:
+  
+$A = 600$
+  
+Además:
+  
+$4.200 = C(4) = 5.000 − 600 e^{b(4)}$
+  
+de donde:
+  
+$e^{4b} = 1,3333$
+  
+Tomando el logaritmo natural en ambos miembros de la igualdad obtenemos: 
+  
+$Ln e^{4b} = ln(1,3333)$
+
+$b = \frac{ln( 2)}{4} = 0,0719205$
+  
+Así, la función tendría la forma:
+  
+$C(t) = 5.000 − 600 e^{0,0719205t}$
+  
+Y, por tanto, el costo a los quince meses será de:
+  
+$C(15) = 5.000 − 600 e^{0,0719205(15)} = 3.235.300$
+  
+Esto quiere decir que el costo a los quince meses será de $ 3.235.300 millones.
+```
+
+Para la programación en R debemos transcribir la última ecuación del despeje anterior.
+
+```{r}
+funsol2_10_1<-function(t){
+  5000-600*exp(0.0719205*t)
+}
+funsol2_10_1(15)
+```
+
+```{example, label=exm2-11}
+Si la variación del monto de una inversión en cualquier período $t$ es proporcional al monto en ese momento, hallar el valor total acumulado en cualquier momento.
+```
+
+```{solution, label=sol2-11}
+Sea $P$ el valor del monto en cualquier momento $t$; entonces, la variación en ese tiempo será $dP/dt$. 
+
+Ahora, si esta variación es proporcional al monto $P$, obtenemos que:
+  
+$\frac{dP}{dt} = kP$, donde $k$ es la constante de proporcionalidad. 
+
+Para resolver esta ecuación, primero separamos las variables así:
+   
+$\frac{dP}{P} = kdt$
+ 
+Integrando en ambos miembros, llegamos a:
+  
+$\int \frac{dP}{P} =\int kdt$
+
+$lnP = kt + c$, donde $c$ es una constante de integración, y entonces:
+  
+$P = e^{kt+c} = e^{kt} e^c = Ae^{kt}$
+  
+donde $A = ec$ y $k$ son constantes; por tanto, el total acumulado en cualquier momento $t$ será: 
+
+$P(t) = Ae^{kt}$
+
+que es una función exponencial en la cual la variación porcentual es constante al k%.
+```
+
+Para la programación en R debemos, a mano, operar, aplicar teoría de logaritmos e integrales.
+
+$$
+\begin{array}{rl}
+\frac{P'}{P}&=kP\\
+\frac{P'}{P}&=kdt\\
+\int \frac{P'}{P}&=\int kdt\\
+ln(P)+c_1&=kt+c_2\\
+ln(P)&=kt+c_1-c_2\\
+ln(P)&=kt+C\\
+e^{ln|(P)}&=e^{(kt+C)}\\
+P&=e^{(kt+C)}\\
+P&=e^{kt}\times e^C\\
+P&=Ac^{kt}\\
+P(t)&=Ac^{kt}
+\end{array}
+$$
+```{r}
+funsol2_11_1<-function(A,k,t){
+  A*exp(k*t)
+} #No se asignan valores a las incógnitas, debido a que solo se busca despejar el valor, más no obtenerlo.
+```
+
+```{example, label=2-12}
+Si una cantidad crece exponencialmente variando en el 10\% cada mes, ¿al cabo de cuántos meses habrá triplicado su valor inicial?
+```
+
+```{solution,label=sol2-12}
+Sea V_0 el valor inicial de esa cantidad. Entonces, al cabo de $t$ meses tendrá un valor de: 
+  
+$V_t = V_0 e^{0,1t}$
+
+Se trata de hallar el valor de $t$ para el cual se cumple que:
+  
+$V_t=3V_0$
+
+O sea:
+  
+$V_0e^{0.1t}=3V_0$
+
+Es decir:
+  
+$e^{0.1t}=3$
+
+Tomando el logaritmo natural en ambos lados de la igualdad, obtenemos:
+  
+$lne^{0.1t}=ln3$
+
+$0.1t=ln3$
+  
+$=\frac{ln3}{0.1}=11$
+  
+Al cabo de once meses, el valor original se habrá triplicado.
+```
+
+Para la programación en R debemos, a mano, operar y aplicar teoría de logaritmos.
+
+$$
+\begin{array}{rl}
+V_t&=V_0e^{0.1t}\\
+V_t&=3V_0\\
+V_0e^{0.1t}&=3V_0\\
+e^{0.1t}&=3\\
+lne^{0.1t}&=ln3\\
+0.1t&=ln3\\
+t&=\frac{ln3}{0.1}
+\end{array}
+
+$$
+
+```{r}
+funsol2_12_1<-function(){
+  log(3)/0.1
+}
+round(funsol2_12_1(), digits=0) #Se usa la función round() para redondear.
+```
+
+```{example, label=2-13}
+Hallar el valor de n que cumpla con la siguiente igualdad:
+  
+$702.507=\frac{45.6000}{0.035-0.02}\left[1-\left(\frac{1.02}{1.035}\right)^n\right]$
+```
+
+```{solution, label=sol2-13}
+Esta ecuación, que encontraremos más adelante en los flujos de caja que crecen en forma geométrica (capítulo 5), puede resolverse de dos formas: una mediante el programa correspondiente a gradientes geométricos crecientes, la otra por el álgebra y la función logarítmica que corresponda al siguiente procedimiento:
+  
+  El objetivo es despejar el factor $\left(\frac{1.02}{1.035}\right)^n$, y esto es igual a:
+  
+  \left(\frac{1.02}{1.035}\right)^n=(0.7689121711)
+
+  Tomando el logaritmo en ambos lados de la igualdad, obtenemos:
+    
+  ln\left(\frac{1.02}{1.035}\right)^n=ln(0.7689121711)
+  
+  $\therefore n=\left(\frac{ln(0.7689121711)}{ln(\frac{1.02}{1.035})}\right)=18$
+    
+  Así, el valor de la variable n que cumple la ecuación dada en el ejercicio es n = 18.
+```
+
+Para la programación en R debemos transcribir la última ecuación del despeje anterior.
+
+```{r}
+funsol2_13_1<-function(){
+  log(0.7689121711)/log(1.02/1.035)
+}
+round(funsol2_13_1(), digits=0) #Se usa la función round() para redondear.
+```
+
