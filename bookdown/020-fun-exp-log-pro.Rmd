@@ -694,7 +694,7 @@ $a,ar,ar^2,ar^3,..., ar^{n-1}$
 
 Al igual que las aritméticas, nos interesan la suma de los n primeros términos. Es decir, el valor S:
 
-$S=a+ar+ar^2+ar^3+...+ar^{n-1$
+$S=a+ar+ar^2+ar^3+...+ar^{n-1}$
 
 Al multiplicar ambos miempros por $r$, obtenemos:
 
@@ -849,3 +849,232 @@ funsol2_20_1=function(){
 funsol2_20_1()
 ```
 
+
+
+## Problemas resueltos
+
+$\mathbf{1.1}$ Hallar el valor de $n$, tal que:
+
+$377,666.5=\frac{25,000}{0.03-0.012}\left[1-\frac{(1.012)^n}{(1.03)^n}\right]$
+
+```{solution, label=solPR1-1}
+
+$377,666.5=\frac{25,000}{0.03-0.012}\left[1-\frac{(1.012)^n}{(1.03)^n}\right]$
+
+De la ecuación anterior se debe despejar los términos que poseen $n$, es decir, el $1.012^n$ y el $1.03^n$. Dicho despeje resulta en la siguiente ecuación:
+  
+$\frac{(1.012)^n}{(1.03)^n}=-\left(\frac{377666.5(0.03-0.012)}{25000}-1\right)$
+```
+
+Utilizando la cónsola de R, resolvemos el segundo miembro de la ecuación:
+
+```{r}
+  -((377666.5*(0.03-0.012)/25000)-1)
+```
+
+Con este resultado tenemos lo siguiente:
+
+$\left(\frac{(1.012)^n}{(1.03)^n}\right)=0.7280801$
+
+Basándonos en las propiedades de la potencia, sabemos que $\frac{a^n}{b^n}=(\frac{a}{b})^n$, entonces:
+
+$\left(\frac{(1.012)}{(1.03)}\right)^n=0.7280801$
+
+Aplicando propiedades de logarítmos, tenemos que:
+
+$ln\ \left(\frac{(1.012)}{(1.03)}\right)^n=ln\ 0.7280801$
+
+Por lo tanto, sabiendo que $ln\ a^n=n\ ln\ a$, entonces:
+
+$n\times ln\ \left(\frac{(1.012)}{(1.03)}\right)=ln\ 0.7280801$
+
+Despejando n por completo se obtiene que:
+
+$n=\frac{ln\ 0.7280801}{\left(\frac{(1.012)}{(1.03)}\right)}$
+
+Utilizando la cónsola de R, resolvemos el segundo miembro de la ecuación:
+
+```{r}
+  log(0.7280801)/(log(1.012)-(log(1.03)))
+```
+
+$\mathbf{n=18}$
+
+$\mathbf{2.1}$  Hallar $X$ tal que $log_b\ 28=1.75$.
+
+```{solution, label=solPR1-2}
+$log_b\ 28=1.75$
+  
+Aplicando teoría de logaritmos, se sabe que:
+  
+$log_b\ 28=1.75$ es equivalente a $x^{1.75}028$
+  
+Por lo que, sabiendo que $sqrt(a)=a^{\frac{1}{2}}$, tenemos que:
+  
+$x=28^{\frac{1}{1.75}}$
+```
+
+Utilizando la cónsola de R, resolvemos el segundo miembro de la ecuación:
+
+```{r}
+  28^(1/1.75)
+```
+
+$\mathbf{X=6.713476}$
+
+$\mathbf{3.1}$  Hallar la suma de los primeros veinte términos de la serie:
+
+$8; 14; 24,5; 42,875; 75,03125;...$
+
+```{solution, label=1-3}
+Si restamos dos términos consecutivos se evidencia que la diferencia no es constante, debido a esto se sabe que no es una serie aritmética.
+
+Entonces, puede que sea geométrica, comprobemos. Si dividimos un termino por el inmediatamente anterior, como puede ser: $\frac{14}{8}=1.75$ y comprobamos con otra división, como puede ser $\frac{24.5}{14}=1.75$. Ya que las razones son iguales, es geométrica y se determina que $r=1.75$.
+
+Aplicando la fórmula de progresiones geométricas: 
+  
+$\frac{a(1-r^n)}{1-r}$
+  
+Siendo $a=8,\ r=1.75, y n=20$; tenemos:
+
+$S=\frac{8(1-1.75^{20})}{1-1.75}$
+```
+
+Utilizando la cónsola de R, resolvemos el segundo miembro de la ecuación:
+
+```{r}
+  (8*(1-(1.75)^20))/(1-1.75) #Solo debemos sustituir los valores en sus respectivas variables
+```
+
+$\mathbf{4.1}$ Hallar el valor de $X$ de tal manera que los números $X + 1$, $3X + 2$ y, $8X + 1$ sean términos consecutivos de uan progesión geométrica.
+
+```{solution, label=solPR1-4}
+Si los términos $X + 1$, $3X + 2$ y, $8X + 1$ son consecutivos, sus razones deben ser iguales, por lo que se debe de cumplir la siguiente igualdad:
+  
+$r=\frac{3X + 2}{X + 1}=\frac{8X + 1}{3X + 2}$
+  
+Si se realiza dicho despeje de $X$, tenemos los siguientes pasos:
+```
+
+
+\begin{array}{rl}
+\frac{3X+2}{X+1}&=\frac{8X+1}{3X+2}\\
+(3X+2)(3X+2)&=(8X+1)(X+1)\\
+9X^2+6X+6X+4&=8X^2+8X+X+1\\
+9X^2-8X^2+12X-9X+4-1&=0\\
+X^2+3X+3&=0\\
+X&=-3±\frac{\sqrt{3^2-(4\times3)}}{2}
+\end{array}
+
+Debido a que el resultado de la raíz es negativo, no hay número real que cumpla con esta ecuación. Debido a esto, no hay X tal que dados números sean consecutivos en una progresión geométrica.
+
+$\mathbf{5.1}$ Hallar el valor de A tal que:
+
+$4,200,000=\frac{A}{0.03-0.015}\left[\frac{(1.03)^{18}-(1.015)^{18}}{(1.03)^{18}}\right]$
+
+```{solution, label=solPR1-5}
+
+$4,200,000=\frac{A}{0.03-0.015}\left[\frac{(1.03)^{18}-(1.015)^{18}}{(1.03)^{18}}\right]$
+
+Dentro de los corchetes, podemos dividis esa fraccion en dos:
+  
+$\left[\frac{(1.03)^{18}-(1.015)^{18}}{(1.03)^{18}}\right]=\left[\frac{(1.03)^{18}}{(1.03)^{18}}-\frac{(1.015)^{18}}{(1.03)^{18}}\right]$
+  
+Y luego, simplificando y aplicando $\frac{a^n}{b^n}=(\frac{a}{b})^n$, tenemos:
+  
+$4,200,000=\frac{A}{0.015}\left[1-\left(\frac{1.015}{1.03}\right)^{18}\right]$
+  
+Donde: $\left[1-\left(\frac{1.015}{1.03}\right)^{18}=0.2320752$
+  
+Despejando $A$, y utizilando R tenemos que:
+```
+
+```{r}
+(0.015*4200000)/0.2320752
+```
+
+$\mathbf{A=271,463.7}$
+
+$\mathbf{6.1}$ Hallar el valor de $j$ tal que:
+
+$32,450,000=19,340,000\left(\frac{12+j}{12}\right)^{36}$
+
+```{solution, label=solPR1-6}
+
+$32,450,000=19,340,000\left(\frac{12+j}{12}\right)^{36}$
+  
+Expresando el paréntesis en fracciónes separadas, y pasando el $19,640,000$ que está multiplicando, dividiendo, tenemos que:
+  
+$\frac{32,450,000}{19,340,000}=\left(1+\frac{j}{12}\right)^{36}$
+  
+Aplicando raiz 36 a ambos miembros para poder resolver el paréntesis, tenemos que:
+  
+$\sqrt[36]{\frac{32,450,000}{19,340,000}}=1+\frac{j}{12}$
+```
+
+Utilizando la cónsola de R, resolvemos el primer miembro de la ecuación:
+
+```{r}
+(32450000/19340000)^{1/36}
+```
+
+Sabiendo esto, tenemos que:
+
+$1.01448-1=\frac{j}{12}$
+
+Y despejando j tenemos que:
+
+$j=(1.01448-1)\times 12$
+
+Utilizando la cónsola de R, resolvemos el segundo miembro de la ecuación:
+
+```{r}
+(1.01448-1)*12
+```
+
+$\mathbf{j=0.17376}$
+
+$\mathbf{7.1}$ Para qué valor de $n$ se cumple que:
+
+$580,600(1.02)^n=\frac{420-2980(1.02)^{2n}}{6(1.02)^n}$
+
+```{solution, label=solPR1-7}
+
+$580,600(1.02)^n=\frac{420-2980(1.02)^{2n}}{6(1.02)^n}$
+  
+Pasando el denominador del segundo miembro al primero, tenemos que:
+  
+$6\times(580,600)(1.02)^{2n}$
+  
+Resolviendo el primer miembro y pasando el $-280(1.02)^{2n}$ del segundo al primer miembro tenemos que:
+  
+$3483880(1.02)^{2n}=420$
+  
+Pasando el término que multiplica al $(1.02)^{2n}$ al otro miembro, tenemops que: 
+  
+$(1.02)^{2n}=\frac{420}{3483880}=0.00012055$
+  
+Aplicando logaritmo neperiano en ambos miembros de la ecuación, obtenemos que:
+  
+$ln\ (1.02)^{2n}=ln\ (0.00012055)$
+  
+Y aplicando propiedades de logarítmis, tenemos que:
+  
+$2n\timesln\ (1.02)=ln\ (0.00012055)$
+  
+Y despejando $2n$, tenemos que: 
+  
+$2n=\frac{0.00012055}{1.02}$
+  
+Siendo $n$, luego de pasar el 2 al otro miembro dividiendo:
+  
+$n=\left(\frac{0.00012055}{1.02}\right)\times(\frac{1}{12})$
+```
+
+Utilizando la cónsola de R, resolvemos el segundo miembro de la ecuación:
+
+```{r}
+(log(0.00012055)/log(1.02))*(1/2)
+```
+
+$\mathbf{n=-227.8346}$
