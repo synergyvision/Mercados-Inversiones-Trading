@@ -1,0 +1,1177 @@
+
+# Estadística Descriptiva
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(latex2exp)
+library(e1071)
+library(moments)
+library(modeest)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+
+source("ggplottheme.R")
+
+mod_name<-"Estadística Descriptiva"
+credits<-function(f) {
+  grid.arrange(f,right=textGrob(paste0(mod_name," (C) Synergy Vision - 2017"),
+                                gp=gpar(fontsize=7, fontface="italic", col="gray75"),
+                                rot=90, just = "centre", vjust=-2))#c(0.58,-2)))
+}
+```
+
+La estadística es la ciencia que trabaja con los datos. Hoy en día ya es conocido el desarrollo de la Ciencia de los Datos, la primera disciplina que es candidata para este nombre es la estadística, sin embargo, en la Ciencia de los Datos también se desarrollan métodos Computacionales y de la matemática también se utilizan métodos como la optimización y el cálculo de probabilidades. 
+
+La estadística en su sentido más tradicional: recolecta, organiza, limpia, resume, simplifica, presenta, analiza, interpreta e infiere sobre los datos. Además, tiene como objetivo el estudio de métodos aplicables a fenómenos medibles o cualitativos, con el objeto de caracterizar y luego inferir. El enfoque es partir de los datos (un conjunto reducido de ellos) y poder hablar de los mismos en los términos más generales posibles.
+
+Existen dos ramas de la estadística: la descriptiva y la inferencial o inductiva. La estadística descriptiva se enfoca en el uso de un grupo de datos para caracterizarlos mediante estadísticos, funciones de los datos, que se utilizan para promediar, evaluar la dispersión y/o el orden, graficar, etc, con el fin de describir una determinada situación; y la estadística inferencial o inductiva trata de descubrir características generales de una población a partir de un subconjunto de la población, es decir, de una muestra.
+
+En este apartado vamos a trabajar con los métodos de la estadística descriptiva, vamos a ver algunos gráficos muy utilizados y medidas como la de tendencia central asociadas a una muestra extraída de una población.
+
+----
+
+__Estadística descriptiva__
+
+La estadística descriptiva tiene como objetivo aplicar una serie de métodos que nos permiten caracterizar una población utilizando una muestra extraída de dicha población.
+
+A continuación definiremos formalmente que es una población y una muestra:
+
+```{definition label=poblacion}
+Una __población__ está conformada por todos los elementos, pertenecientes a un conjunto, que se desean estudiar.
+```
+
+A partir de dichos elementos se desean conocer características acerca de la población. Este conjunto puede ser finito o infinito, debe estar bien definido ya que así sabremos cuando un elemento pertenece o no a la población.
+
+```{definition label=muestra}
+Una __muestra__ es un subconjunto de los elementos de la población.
+```
+
+El tamaño de las muestras es importante, ya que las conclusiones acerca de la población no son confiables si se basan en muestras muy pequeñas o no representativas. Estas muestras se deben obtener de manera apropiada, es decir, en lo posible la muestra debe ser representativa. Por ejemplo seleccionar aleatoriamente los elementos de un conjunto.
+
+Siempre se desea tomar una __muestra representativa__ que preserve las características más relevantes de la población. En particular que mantenga las proporciones existentes en la población.
+
+Ahora vamos a ver algunos métodos para sumarizar o resumir los datos mediante la representación visual a través de algunos gráficos esenciales. De esta manera podemos tener una idea intuitiva sobre los datos.
+
+## Tablas de Frecuencias
+
+Cuando se trabaja con muchos datos, generalmente se organizan para observar las características  de la muestra. Una forma usual de organizar los datos consiste en dividirlos en categorías o clases similares y luego enumerar las observaciones que quedan dentro de cada categoría o clase. 
+
+Esto se hace para identificar patrones, valores más frecuentes o alrededor de qué valor se distribuyen los datos, entre otros.
+
+A este método se le denomina tabla de frecuencias o distribución de frecuencias. A continuación vamos a mostrar una manera de construir las tablas de frecuencias:
+
+Supongamos que tenemos una muestra $x_1,...,x_n$ y sea $x_{\text{min}}$, $x_\text{{max}}$ el valor mínimo y máximo respectivamente. Con los valores mínimos y máximos se construye un intervalo y luego este se divide en $k$ trozos del mismo tamaño, a estos se les llama clases y usualmente son intervalos de la forma $[a,b)$. A estas clases creadas se les calcula el punto medio y a estos se les asigna el número de elementos de la muestra que pertenecen a cada clase, es decir, la frecuencia en que un dato de la muestra pertenece a un intervalo.
+
+El __número de clase__ $k$ depende del número de datos y del alcance de los datos recolectados. Generalmente se utilizan entre 6 y 15 clases, depende de la decisión del investigador. 
+
+También existen reglas para la selección de dicho valor, a continuación se presentarán algunas de ellas.
+
+- __Fórmula de sturges__, lleva este nombre debido a su creador Herbert Sturges (1926), el valor de $k$ se deduce de aproximar la cantidad de datos $n$  por el binomio de Newton, es decir,
+
+$$
+\begin{array}{rl}
+n&=\displaystyle \sum_{i=0}^{k-1} \left( \begin{matrix} k-1 \\i\end{matrix}\right)\\
+&=\displaystyle \sum_{i=0}^{k-1} \left( \begin{matrix} k-1 \\i\end{matrix}\right)1^{k-1-i}1^i\\
+&=(1+1)^{k-1}\\
+n & = 2^{k-1}
+\end{array}
+$$
+
+De donde tenemos
+
+$$
+\begin{array}{rl}
+\ln(n) & = \ln(2^{k-1})\\
+& = (k-1)\ln(2)\\
+\displaystyle \frac{\ln(n)}{\ln(2)} & = k -1
+\end{array}
+$$
+
+$$
+\begin{equation}
+k =\displaystyle \frac{\ln(n)}{\ln(2)}+1
+(\#eq:sturges)
+\end{equation}
+$$
+
+En `R` este valor lo podemos conseguir con el comando `nclass.Sturges()`, donde sólo se le introduce como parámetro de entrada el vector con los datos muestrales.
+
+- __Regla de Scott__, fué propuesta por David W. Scott en 1979, el cálculo del número de intervalos viene dado por la siguiente ecuación
+
+$$
+\begin{equation}
+k=3.49 Sn^{-\frac{1}{3}}
+(\#eq:scott)
+\end{equation}
+$$
+
+Donde $S$ es la desviación estándar de los datos, cuando los datos son normalmente distribuidos $k$ es optimo. 
+
+En **R** para calcular el número de intervalos utilizando esta regla se hace con el comando `nclass.scott()`, donde igualmente sólo necesita como parámetro de entrada el vector con los datos muestrales.
+
+- La __selección de Freedman - Diaconis__, propuesto por David Freedman y Persi Diaconis (1981), nos dice que la cantidad de inervalos se puede definir mediante la siguiente expresión:
+
+$$
+\begin{equation}
+k = \displaystyle 2 \frac{IQR(\mathbf x)}{n^{\frac{1}{3}}}
+(\#eq:freedmanDiaconis)
+\end{equation}
+$$
+
+Donde $IQR$ es el rango intercuantil, es decir la diferencia entre el tercer y el primer cuartil, los cuales se verán más adelante.
+
+En `R` para esta selección se usa el comando `nclass.FD()`, como parámetro de entrada se coloca un vector con los datos muestrales.
+
+Para encontrar el ancho de los intervalos utilizamos la siguiente ecuación:
+
+$$
+\begin{equation}
+\text{Ancho del intervalo}= \frac{x_{\text{max}}-x_{\text{min}}}{k}
+(\#eq:anchointerval)
+\end{equation}
+$$
+
+Debido a la forma como se construyen las clases, los intervalos son disjuntos, entonces cada elemento de la muestra pertenece solamente a una clase. Y así se puede asociar cada elemento a un clase específica, de manera que podemos tener cuantos elementos de la muestra pertenecen a cada clase.
+
+El __punto medio del intervalo__ se obtiene promediando el límite inferior y superior de cada clase.
+
+```{example label=ejem-sueldo-ing}
+Se tienen los sueldos anuales (en miles de dólares) en el primer trabajo de 42 recién graduados con títulos de licenciatura en ingeniería eléctrica:
+  
+1) Crear 8 clases, donde cada intervalos incluya el mínimo y no incluya el máximo, es decir son cerrados en su extremo superior y abierto en su extremo inferior.
+
+2) Crear una tabla que le asigne a cada intervalo el número de elementos que pertenecen al mismo.
+```
+
+
+```{r}
+#Cargar Datos en la variable sueldo
+sueldos <- c(47,47,47,47,48,49,50,50,50,51,51,51,51,52,52,52,52,52,52,54,54,
+             54,54,54,57,60,49,49,50,50,51,51,51,51,52,52,56,56,57,57,52,52)
+
+#Cálculo de donde cae cada valor muestral
+Intervalos<-cut(sueldos, breaks=8, include.lowest = TRUE, right = FALSE)
+Intervalos
+
+#Conteo de los intervalos
+Conteo<-table(Intervalos)
+Conteo
+```
+
+```{r, eval=FALSE}
+df<-data.frame(Conteo)
+colnames(df)<-c("Intervalo", "Frecuencia")
+kable(df)
+```
+
+```{r, echo=FALSE}
+df<-data.frame(Conteo)
+colnames(df)<-c("Intervalo", "Frecuencia")
+kable(df, caption = 'Tabla de frecuencia de los sueldos anuales de los estudiantes de ingeníeria en su primer año de trabajo')
+```
+
+En `R` la función `cut()` crea los intervalos y asigna a cada elemento del vector de datos a un único intervalo, es decir el intervalo al cual pertenece, luego con la función `table()` se crea una tabla que le asigna a cada intervalo el número de elemento que pertenecen a dicho intervalo. Finalmente con la función `kable()` se creó una tabla que muestra los intervalos con la frecuencia de cada intervalo.
+
+De estos resultados podemos decir lo siguiente:
+
+- En el intervalo menor, $[47.000\$, 48.600\$)$, hay 5 de los graduados.
+
+- En el intervalo mayor, $[58.400\$, 60.000\$)$, sólo hay un graduado.
+
+- El intervalo al cual pertenecen más graduados ($10$) es el intervalo $[51.900\$, 53.500\$)$.
+
+Recordemos que no hay una fórmula exacta en relación a cómo se agrupan los datos o cuantas clases son convenientes. La experiencia del analista y el objeto de la investigación dirigen la conveniencia de crear más o menos clases.
+
+Muchas veces nos interesa trabajar con las __frecuencias relativas__, ya que mientras los números absoluto pueden sufrir cambios, la relación entre las clases permanece estable. Estas se obtienen  dividiendo el número de elementos que pertenecen a cada clase entre el total de los elementos. Es decir, se utilizan las frecuencias relativas en vez de las frecuencias absolutas, generalmente se representan en porcentajes
+
+$$
+\begin{equation}
+\text{Frecuencia relativa}=\frac{\text{# Elementos de la clase}}{\text{# Total de elementos}}
+(\#eq:frecuencia-relativa)
+\end{equation}
+$$
+
+La función que realiza este cálculo en **R** es `prop.table()`.
+
+```{r, eval=FALSE}
+fr<-transform(df,Fr=prop.table(Frecuencia))
+colnames(fr)<-c("Intervalo", "Frecuencia","Frecuencia Relativa")
+kable(fr)
+```
+
+```{r, echo=FALSE}
+fr<-transform(df,Fr=prop.table(Frecuencia))
+colnames(fr)<-c("Intervalo", "Frecuencia","Frecuencia Relativa")
+kable(fr, caption = 'Tabla de frecuencia y frecuencia relativa de los sueldos anuales de los estudiantes de ingeníeria en su primer año de trabajo')
+```
+
+La función `transform()` lo que hace es agregar a el `data.frame` `df` una nueva variable `Fr` que contiene la frecuencia relativa calculada con la función `prop.table()`.
+
+## Resumen y graficación de los datos
+
+Generalmente se tiene una muestra de datos correspondiente a una población, y dada esta muestra se quieren sacar conclusiones sobre la población, esto lo hacemos mediante gráficos que representen características asociadas a la población. Por ejemplo con una muestra representativa de los datos de la población podemos tener las proporciones de ocurrencias de ciertos eventos y luego estos resultados los podemos extender a toda la población y así sacar conclusiones.
+
+A continuación vamos a presentar los gráficos y medidas más comunes usadas para explicar características específicas de la población.
+
+### Histogramas y polígonos de frecuencia
+
+Son una representación gráfica de las tablas de frecuencias. 
+
+Un __histograma__ consiste en un conjunto de rectángulos, cuyo ancho es proporcional al rango de los valores que se encuentran en una clase y la altura es proporcional al número de elementos que pertenecen a la clase, ésta representa el número de observaciones. 
+
+TODO: En el histograma no se están mostrando las mismas 8 clases que se hicieron antes. Sólo se están mostrando 7.
+
+A continuación presentaremos un histograma de los datos correspondientes al ejemplo \@ref(exm:ejem-sueldo-ing)
+
+```{r, eval=FALSE}
+dat<-data.frame(sueldos)
+ggplot(dat,aes(x=sueldos))+
+  geom_histogram( aes(y=..count..),
+                  closed="left",bins = 8,
+                  fill="blue",col="black",alpha=0.7)+
+  labs(title = "Histograma", x="x", y="Frecuencia")
+```
+
+En el gráfico anterior vemos las frecuencias de cada clase, ahora si queremos ver las frecuencias relativas usamos los siguientes comandos
+
+```{r, echo=FALSE}
+dat<-data.frame(sueldos)
+f<-ggplot(dat,aes(x=sueldos))+
+  geom_histogram( aes(y=..count..),
+                  closed="left",bins = 8,
+                  fill="blue",col="black",alpha=0.7)+
+  labs(title = "Histograma", x="x", y="Frecuencia",
+       caption = "http://synergy.vision/" )+ vision 
+credits(f)
+```
+
+```{r, eval=FALSE}
+dat<-data.frame(sueldos)
+ggplot(dat,aes(x=sueldos))+
+  geom_histogram( aes(y=..density..),
+                  closed="left",bins = 8,
+                  fill="blue",col="black",alpha=0.7)+
+  labs(title = "Histograma", x="x", y="Frecuencia")
+```
+
+```{r, echo=FALSE}
+f<-ggplot(dat,aes(x=sueldos))+
+geom_histogram( aes(y=..density..),
+                  closed="left",bins = 8,
+                  fill="blue",col="black",alpha=0.7)+
+  labs(title = "Histograma", x="x", y="Frecuencia Relativa",
+       caption = "http://synergy.vision/" )+ vision 
+
+credits(f)
+```
+
+Observamos que los histogramas con las frecuencias y frecuencias relativas tienen la misma forma, con las mismas clases pero distintos valores en el eje de las $y$.
+
+Los __polígonos de frecuencia__ son el resultado de tomar los puntos medios de las clases y asignarles la frecuencia correspondiente. Luego se unen todos estos puntos con una línea, formando un polígono.
+
+```{r, eval=FALSE}
+ggplot(dat=dat,aes(x=sueldos))+ 
+  geom_histogram( aes(y=..count..),
+                  closed="left",bins = 8,linetype="dashed",
+                  fill="blue",col="black",alpha=0.3)+
+  geom_freqpoly( col="red",size=0.8,bins=8)+
+  labs(title = "Polígono de Frecuencia", x="x", y="Frecuencia")
+```
+
+```{r, echo=FALSE}
+f<-ggplot(dat=dat,aes(x=sueldos))+ 
+    geom_histogram( aes(y=..count..),
+                    closed="left",bins = 8,linetype="dashed",
+                    fill="blue",col="black",alpha=0.3)+
+    geom_freqpoly( col="red",size=0.8,bins=8)+
+    labs(title = "Polígono de Frecuencia", x="x", y="Frecuencia",
+         caption = "http://synergy.vision/")+ vision
+credits(f)
+```
+
+Estos gráficos nos permiten identificar donde se centran los datos. En el ejemplo \@ref(exm:ejem-sueldo-ing) observamos que los datos se distribuyen alrededor de $51.000\$$. Otra observación es la forma en que se distribuyen, podemos ver que hay más datos a la izquierda del gráfico que a la derecha, es decir, para la mayoría de los graduados el salario es menor que $54.000\$$. También podemos decir que la mayoría de los salarios se encuentran entre $45.000\$$ y $51.000\$$.
+
+### Ojivas y Distribuciones de Frecuencia
+
+Una __distribución de frecuencia__, también llamada frecuencia total o acumulada, nos da el número de observaciones que son menores a cierto valor, en lugar de contar el número de elementos que hay dentro de cada intervalo.
+
+Una __ojiva__ es una gráfica que representa la frecuencia acumulada para los valores de la muestra. Este tipo de gráfico nos ayuda ver cuantos valores se encuentran por debajo de un valor específico.
+
+Siguiendo el procedimiento previo de los gráficos de frecuencia ahora vamos a utilizar en `R` la función `cumsum()`, ésta generar una columna con la suma de las observaciones que son menores a un valor de la tabla. De esta manera obtenemos la frecuencia acumulada.
+
+Utilizando nuevamente \@ref(exm:ejem-sueldo-ing) tenemos:
+
+```{r eval=FALSE}
+fr<-data.frame(table(sueldos))
+fa<-transform(fr,fAcum=cumsum(Freq))
+colnames(fa)<-c("Sueldos","Frecuencia","Frecuencia Acumulada")
+kable(fa)
+```
+
+```{r echo=FALSE}
+fr<-data.frame(table(sueldos))
+fa<-transform(fr,fAcum=cumsum(Freq))
+colnames(fa)<-c("Sueldos","Frecuencia","Frecuencia Acumulada")
+kable(fa, caption = 'Tabla de frecuencia y frecuencia acumulada de los sueldos anuales de los estudiantes de ingeníeria en su primer año de trabajo')
+```
+
+```{r, eval=FALSE}
+dat<-data.frame(sueldos=as.numeric(fa$Sueldos),
+                  facum=as.numeric(fa$`Frecuencia Acumulada`))
+
+ggplot(dat,mapping = aes(sueldos,facum))+ 
+  geom_point(colour="blue" )+
+  geom_line( colour="blue")+
+  labs(title = "Distribución de Frecuencia", x="x", 
+       y="Frecuencia Acumulada")
+```
+
+```{r, echo=FALSE}
+dat<-data.frame(sueldos=as.numeric(fa$Sueldos),
+                  facum=as.numeric(fa$`Frecuencia Acumulada`))
+
+f<-ggplot(dat,mapping = aes(sueldos,facum))+ 
+  geom_point(colour="blue" )+
+  geom_line( colour="blue")+
+  labs(title = "Distribución de Frecuencia", x="x", 
+       y="Frecuencia Acumulada",
+       caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+La frecuencia relativa acumulada, es la frecuencia acumulada dividida por la frecuencia total. 
+
+Para el cálculo correspondiente en `R` combinamos la función `cumsum()` y `prop.table()` para obtener la frecuencia relativa acumulada.
+
+```{r eval=FALSE}
+faf<-transform(fa,FreAcuRel=cumsum(prop.table(`Frecuencia Acumulada`)))
+colnames(faf)<-c("Sueldos","Frecuencia","Frecuencia Acumulada",
+                 "Frecuencia Acumulada Relativa")
+kable(faf)
+```
+
+```{r label=tabla-freq-acum, echo=FALSE}
+faf<-transform(fa,FreAcuRel=cumsum(prop.table(`Frecuencia Acumulada`)))
+colnames(faf)<-c("Sueldos","Frecuencia","Frecuencia Acumulada",
+                 "Frecuencia Acumulada Relativa")
+kable(faf, caption = 'Tabla de frecuencia y frecuencia acumulada y frecuencia relativa acumulada de los sueldos anuales de los estudiantes de ingeníeria en su primer año de trabajo')
+```
+
+```{r, eval=FALSE}
+dat<-data.frame(sueldos=as.numeric(faf$Sueldos),
+                  far=as.numeric(faf$`Frecuencia Acumulada Relativa`))
+
+ggplot(dat,mapping = aes(sueldos,far))+ 
+  geom_point(colour="blue")+
+  geom_line(colour="blue")+
+  labs(title = "Distribución de Frecuencia", x="x", 
+       y="Frecuencia Acumulada Relativa")
+```
+
+```{r,echo=FALSE}
+dat<-data.frame(sueldos=as.numeric(faf$Sueldos),
+                  far=as.numeric(faf$`Frecuencia Acumulada Relativa`))
+
+f<-ggplot(dat,mapping = aes(sueldos,far))+ 
+  geom_point(colour="blue")+
+  geom_line(colour="blue")+
+  labs(title = "Distribución de Frecuencia", x="x", 
+       y="Frecuencia Acumulada Relativa",
+       caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+### Diagrama de Tallo y Hoja
+
+Los gráficos de tallo y hoja separan cada valor de los datos en dos partes, la parte izquierda (el dígito ubicado en el extremo izquierdo) será el tallo y la derecha (dígito ubicado en el extremo derecho) la hoja. Tanto el tallo como las hojas se ordenan de forma ascendente.
+
+La decisión de donde se divide es personal, por ejemplo podemos dividir en el primer punto decimal, es decir si tenemos el número 78.5, 78 corresponde al tallo y 5 corresponde a la hoja $(78\ |\ 5)$, ésto se hace para todos los números que tengamos en los datos, agrupando del lado de la hoja todos los valores que se vayan encontrando, si por ejemplo tenemos otro valor con el mismo tallo, como 78.12, tendríamos una hoja nueva, cuyo valor sería 1, y habría que agregarla al extremo izquierdo del tallo que teníamos, quedándonos entonces $78\ |\ 51$. Si el valor de la parte decimal del número es mayor que 10 sólo se toma como hoja el primer número y si el siguiente es mayor o igual a 5 se le suma uno al valor que se tenga por ejemplo si se tiene 78.122 la hoja sería 1 como el siguiente número es 2 no se le suma nada a la hoja, pero si se tiene 78.161 la hoja sería 1 y como el número siguiente es 6 y este es mayor que 5 se le suma una unidad a la hoja, así la nueva hoja sería 2.
+
+A continuación presentaremos el gráfico de tallo y hoja de los datos del ejemplo \@ref(exm:ejem-sueldo-ing) en `R`, para ello se usará la función `stem()`.
+
+```{r}
+stem(sueldos,scale = 2)
+```
+
+Este resultado es muy similar al histograma, en la parte izquierda tenemos las clases que coinciden con los valore que encontramos en los datos y en la parte izquierda el primer elemento decimal de cada dato, en este caso sólo se observa la información numérica de los datos. Otra ventaja es que ordena los datos.
+
+Si se escoge una escala pequeña, por ejemplo usando sólo el primer dígito como tallo, generalmente se tendrían pocos valores para el tallo y eso concentraría los datos. 
+
+```{r}
+stem(sueldos, scale=0.2)
+```
+
+### Gráfico de Barras
+
+Los gráficos de barras son muy similares a los histogramas, la única diferencia es que las barras no son contiguas, cada barra representa la cantidad de elementos que corresponden a un valor o rango de valores.
+
+```{example label= ejem-horas-uso}
+Un estudio registra el tiempo de uso de los equipos en una compañía, obteniendo los siguientes resultados:
+
+| Horas      	| 2  	| 3  	| 4  	| 6  	| 7 	|
+|:-----------:|:---:|:---:|:---:|:---:|:---:|
+| Frecuencia 	| 46 	| 15 	| 12 	| 52 	| 8 	|
+  
+```
+
+Cargaremos estos datos en las siguientes variables
+
+```{r}
+Horas<-c(2,3,4,6,7)
+Frecuencia<-c(46,15,12,52,8)
+datos<-c(rep(2,46),rep(3,15),rep(4,12),rep(6,52),rep(7,8))
+```
+
+Como la cantidad de variables son finitas, podemos representar estos datos mediante un gráfico de barra
+
+```{r, eval=FALSE}
+dat<-data.frame(Horas,Frecuencia)
+ggplot(dat, aes(x=Horas,y=Frecuencia))+
+  geom_bar(stat = "identity", color="black",
+           fill="Blue", alpha=0.5)+
+  labs(title = "Diagrama de Barra", x="x",y="Frecuencias")
+```
+
+```{r,echo=FALSE}
+dat<-data.frame(Horas,Frecuencia)
+f<-ggplot(dat, aes(x=Horas,y=Frecuencia))+
+  geom_bar(stat = "identity", color="black",
+           fill="Blue", alpha=0.5)+
+  labs(title = "Diagrama de Barra", x="x",y="Frecuencias",
+       caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+----
+
+A continuación vamos a generar un gráfico de barras para los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r, eval=FALSE}
+dat<-data.frame(table(sueldos))
+ggplot(dat, aes(x=sueldos,y=Freq))+
+  geom_bar(stat = "identity", color="black",
+           fill="Blue", alpha=0.5)+
+  labs(title = "Diagrama de Barra", 
+       x="Sueldos en millones de dólares",y="Frecuencias")
+```
+
+```{r, echo=FALSE}
+dat<-data.frame(table(sueldos))
+f<-ggplot(dat, aes(x=sueldos,y=Freq))+
+  geom_bar(stat = "identity", color="black",
+           fill="Blue", alpha=0.5)+
+  labs(title = "Diagrama de Barra", 
+       x="Sueldos en millones de dólares",y="Frecuencias",
+       caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+----
+
+## Estadísticos
+
+Una definición muy importante y usada en estadística son los **estadísticos**, estos son funciones evaluados en una muestra de la población que se utilizan para realizar pruebas acerca de la población. 
+
+Estos valores se usan para contrastar hipótesis (nula contra una alternativa, se verá más detalle de esto en la sección de inferencia paramétrica), generalmente están basados en que la hipótesis nula es cierta y dependiendo del valor que toman se concluye si se acepta o no la hipótesis nula.
+
+Así tenemos la siguiente definición
+
+```{definition label=estadistico }
+Dada una muestra $x_1,x_2,...,x_n$ de una población se define un **estadístico** como una función medible $T$ evaluada en la muestra $T(x_1,x_2,...,x_n)$, este no tiene ningún parámetro desconocido.
+```
+
+### Medidas sobre los datos
+
+Existen medidas que nos dan características puntuales sobre los datos, y en base a estas se pueden sacar conclusiones sobre donde se concentran los datos o hacia donde tienden los mismos.
+
+Existes cuatro tipos de medidas:
+
+a) __Medidas de centralización__, suelen ser la mejor representación de los datos, son llamadas así porque nos dan aproximaciones del centro de los datos o los que más se repiten, por ejemplo la media o la moda. 
+
+b) __Medidas de Dispersión__, estas medidas nos dan la representación de que tan alejado estas los datos de medidas centrales, entre ellas encontramos la varianza o desviación estándar.
+
+c) __Medidas de posición o orden__, estas medidas están asociadas a las posiciones probabilísticas de los datos, mediante ellas podemos dividir los datos por regiones, una de estas medidas son los cuartiles que dividen los datos en 4 subpoblaciones iguales. 
+
+d) __Medidas de forma__, estas medidas están asociadas con la forma de la distribución de los datos, veremos características como el sesgo y la curtosis.
+
+A continuación se explicarán las medidas más usadas a la hora de realizar un análisis estadístico: 
+
+#### Medidas de tendencia central
+
+La medida básica sobre un conjunto de datos es el valor promedio. En muchos casos los datos tienden a estar cerca de este valor y por ello se denominan como medida de tendencia central. Las variables aleatorias tienden a estar cerca de este valor. No necesariamente es un valor que se repite mucho, sino el valor alrededor del cual se amontonan los datos de la muestra. Este valor puede ser o no ser un valor que aparece en la muestra, es decir, puede no pertenece al conjunto de los posibles valores que puede tomar los elementos de la población.
+
+Supongamos que tenemos una muestra aleatoria simple $x_1,..., x_n$  de las variables $X_1,...,X_n$. Por los momentos nos concentraremos en que la muestra son ciertos elementos que me representan la población, en las siguientes secciones se explicará con más detalle que significa que seán aleatorias simples. 
+
+A continuación presentaremos las medidas de tendencia central. Estas suelen utilizarse con mucha frecuencia en estadísticas, ya que nos proporcionan características puntuales sobre los datos. En estimación paramétrica que se abordará más adelante podremos constatar que con los estimadores de máxima verosimilitud, es decir para ciertas distribuciones de probabilidad se estiman los parámetros que las caracterizan a partir de los datos, uno de los parámetros que maximiza la función de verosimilitud es la media aritmética. Aunque algunos de los términos que acabamos de emplear no se entiendan ahora, nos interesa hacer énfasis en la importancia que la media reviste en la estadística. Su importancia no es caprichosa, en general, una de las primeras cosas que vamos a hacer con un conjunto de datos es calcular la media.
+
+__1) Media__
+
+```{definition label=media }
+La **media** ó **media aritmética** de un conjunto $x_1 + x_2 + ... +x_n$ de $n$ números se denota por $\bar X$ y se define como:
+  
+$$
+\begin{equation}  
+\overline X = \frac{\displaystyle \sum_{i=1}^n x_i}{n}=\frac{ x_1 + x_2 + ... +x_n}{n}
+(\#eq:media)
+\end{equation}
+$$
+```
+
+Esta definición representa un valor promedio de la muestra. 
+
+----
+
+En `R` podemos usar la función `mean()` o utilizar las funciones `sum()` (calcula la suma de los elementos de un vector) y `length()` (da el tamaño de un vector). Realicemos el cálculo de esta medida utilizando los datos del ejemplo \@ref(exm:ejem-sueldo-ing)
+
+```{r}
+sum(sueldos)/length(sueldos)
+
+mean(sueldos)
+```
+
+Obtenemos que el mejor representante de los sueldos de los ingenieros es `r round(mean(sueldos),digits=4)`.
+
+----
+
+Si los datos se encuentran agrupados, es decir, supongamos que tenemos los valores $x_1,...,x_k$ con las frecuencias respectivas $f_1,...f_k$ la media aritmética ponderada es
+
+$$
+\begin{equation}
+\overline X = \frac{f_1x_1+f_2x_2+...+f_nx_n}{f_1+f_2+...+f_n}=\frac{\displaystyle \sum_{i=1}^k f_ix_i}{\displaystyle \sum_{i=1}^k f_i}=\frac{\displaystyle \sum_{i=1}^k f_ix_i}{n}
+(\#eq:media-freq)
+\end{equation}
+$$
+
+Donde $n$ es la frecuencia total.
+
+----
+
+Tomaremos los datos del ejemplo \@ref(exm:ejem-horas-uso), ya que son datos agrupados, tenemos los valores de la muestras (horas de usos del computador) y las frecuencias con las que se encuentran los mismos.
+
+```{r}
+sum(Horas*Frecuencia)/sum(Frecuencia)
+
+mean(datos)
+```
+
+El valor medio de las horas de uso de un computador son `r round(mean(datos),digits=4)`.
+
+----
+
+La media aritmética aunque es confiable, porque toma todos los valores de la muestra, puede verse afectada por valores extremos que desvían o distorsionan la media.
+
+De hecho la media aritmética no es un estadístico robusto. Más adelante vamos a hablar de esta característica que es importante para identificar situaciones donde la media no es apropiada.
+
+__2) La media geométrica__
+
+```{definition label=media-geometrica }
+La **media geométrica** de un conjunto de números positivos es la raíz n-ésima del producto de dichos números, es decir
+  
+$$
+\begin{equation}  
+G=\sqrt[n]{x_1\times x_2\times ...\times x_n}
+(\#eq:media-geometrica)
+\end{equation}
+$$
+```
+
+Comparandola con la media aritmética, esta media se ve menos afectada por datos extremos. Una de las desventajas de esta medida es que sólo puede aplicarse a datos positivos, o que sólo una cantidad par de ellos sea negativa de modo que su producto de un valor positivo. En caso de que uno de ellos sea cero la misma nos dará cero.
+
+----
+
+En `R` utilizaremos las funciones `length()` y `prod()` (calcula el producto de los elementos de un vector) para el cálculo de dicho valor, utilizando los datos del ejemplo \@ref(exm:ejem-sueldo-ing)
+
+```{r}
+n<-length(sueldos) #Número de datos
+
+prod(sueldos)^(1/n)
+```
+
+----
+
+__3) La media armónica__
+
+```{definition label=media-armonica }
+La **media armónica** se define como la inversa de la media de los inversos de los valores muestreados, matemáticamente sería:
+  
+$$
+\begin{equation}
+H=\frac{1}{\frac{\displaystyle \sum_{i=1}^n \frac{1}{x_i}}{n}}=\frac{n}{\displaystyle \sum_{i=1}^n \frac{1}{x_i}}
+(\#eq:media-armonica)
+\end{equation}
+$$
+```
+
+Por la manera en que está definida, ésta no existirá cuando en la muestra hayan datos iguales a cero.
+
+----
+
+En `R` las funciones que usaremos para su cálculo son `sum()` y `length()`. 
+
+```{example label=ejem-ventas}
+Supongamos que tenemos los valores finales obtenidos en las ventas de una tienda, en millones de dólares, por un período de 10 años.
+
+|        Año        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  10  |
+|:-----------------:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+| Ventas en dólares | 1034 | 1075 | 1123 | 1172 | 1218 | 1265 | 1313 | 1379 | 1452 | 1597 |
+  
+```
+
+Calculemos la media aritmética de estos datos
+
+```{r}
+ventas <- c(1034,1075,1123,1172,1218,1265,1313,1379,1452,1597)
+
+length(ventas)/sum(1/ventas)
+```
+
+Con este valor podemos decir que el valor promedio de ventas es de `r length(ventas)/sum(1/ventas)` millones de dólares.
+
+----
+
+__4) La media ponderada__
+
+```{definition label=media-ponderada }
+La **media ponderada** le asigna pesos $w_i$ a los valores correspondientes a la muestra $x_i$, con $i=1,...,n$, estos pesos dependen de la importancia que pueda tener cada valor.
+
+$$
+\begin{equation}
+\overline X = \frac{\displaystyle \sum_{i=1}^n x_i w_i}{\displaystyle \sum_{i=1}^n w_i}
+(\#eq:media-ponderada)
+\end{equation}
+$$
+```
+
+Para realizar dicho cálculo en `R` utilizamos la función `weighted.mean()`, tiene como parámetros de entrada los datos muestrales y los correspondientes pesos.
+
+----
+
+```{example label=ejem-ventas-productos}
+Se tienen las ventas de 3 productos, las cantidades exactas vendidas de cada uno y la cantidad de dólares recibidos por dichas ventas se encuentran en la siguiente tabla
+
+| Producto | Cantidades Vendidas | Ventas en dólares |
+|:--------:|:-------------------:|:-----------------:|
+|     1    |         1500        |       1454.3      |
+|     2    |         984         |       1027.5      |
+|     3    |         1567        |       3125.3      |
+  
+Calcular el valor promedio de ventas.
+```
+
+Por la definición el valor promedio dependerá de las cantidades vendidas en cada producto, dandole mayor peso al producto que se vendió más. Los pesos serán calculados dividiendo la cantidad de productos vendidos de un artículo en particular entre la cantidad total de productos vendidos.
+
+```{r}
+cantidades_vendidas <- c(1500,984,1567)
+ventas <- c(1454.3,1027.5,3125.3)
+
+#Para el cálculo de los pesos
+w<-cantidades_vendidas/sum(cantidades_vendidas)
+
+weighted.mean(x=ventas,w=w)
+```
+
+Por lo tanto la cantidad en dólares promedio que se obtiene por las ventas de los tres productos es de `r weighted.mean(x=ventas,w=w)` dólares.
+
+----
+
+__5) La mediana__
+
+```{definition label=mediana}
+La **mediana** es la medida de tendencia central que obtiene el valor intermedio, cuando los datos están ordenados en orden creciente, o decreciente.
+
+Si el tamaño de la muestra es un número par, para encontrar el valor de la mediana los ordenamos de menor a mayor y luego el valor de la mediana será
+
+$$
+\begin{equation}
+Mediana = \frac{x_{\frac{n+1}{2}}+x_{\frac{n-1}{2}}}{2}
+(\#eq:mediana-par)
+\end{equation}
+$$
+    
+Si el tamaño de la muestra es impar, la mediana viene dada por la posición $\frac{n+1}{2}$
+
+$$  
+\begin{equation}
+Mediana = x_{\frac{n+1}{2}}
+(\#eq:mediana-impar)
+\end{equation}
+$$
+```
+
+Ésta divide el conjunto de datos en dos mitades que tienen el mismo número de observaciones.
+
+----
+
+Para calcular esta medida en `R` usamos la función `median()` y para ordenar el vector de datos de menor a mayor usamos la función `sort()`.
+
+Utilizaremos los datos correspondientes a los del ejercicio \@ref(exm:ejem-sueldo-ing).
+
+Calculando la mediana para los datos correspondientes a los sueldos, que son par es
+
+```{r}
+length(sueldos) #Cantidad de datos par
+median(sort(sueldos))
+```
+
+La mediana de los sueldos de los ingenieros es `r round(median(sort(sueldos)),digits=4)`.
+
+Ahora calculemos la mediana a los datos correspondientes al ejemplo \@ref(exm:ejem-horas-uso).
+
+```{r}
+length(datos) #Cantidad de datos impar
+median(sort(datos))
+```
+
+La mediana de las horas de uso del computador en una compañía es `r round(median(sort(datos)), digits=4)`. 
+
+----
+
+Los valores extremos no afectan esta medida por ello se considera robusta, es decir, no es afectada por variaciones pequeñas sobre los datos, y una de las desventajas es que tenemos que ordenar los datos y esto amerita tiempo para un conjunto de datos muy grande.
+
+__6) La moda__
+
+```{definition label=moda}
+La __moda__ se define como el valor que más se repite en una muestra, o en otras palabras el valor que ocurre con más frecuencia.
+```
+
+Puede no ser única en caso de existir.
+
+----
+
+Para calcular esta medida en `R` tenemos la función `mfv()`.
+
+Veamos cual es la moda en los datos del ejemplo \@ref(exm:ejem-sueldo-ing) y según la tabla \@ref(tab:tabla-freq-acum) el valor que más se repite en los datos correspondientes a los salarios es $52.000\$$. Calculemoslo en `R`.
+
+```{r}
+mfv(sueldos)
+```
+
+El sueldo que más se repite es `r mfv(sueldos)` mil dólares.
+
+Ahora hagamos el cálculo de la moda para los datos del ejemplo \@ref(exm:ejem-horas-uso)
+
+```{r}
+mfv(datos)
+```
+
+La hora de uso de la computadora que más se repite es `r mfv(datos)`.
+
+----
+
+Si se tienen dos datos que tienen la misma frecuencia, se dice que la muestra es bimodal, cuando más de dos valores presentan la misma frecuencia se dice que la muestra es multimodal y si ningún valor se repite no hay moda.
+
+#### Medidas de dispersión o concentración
+
+__1) Desviación absoluta__
+
+También llamada desviación media, esta medida no es más que un promedio de las distancias en valor absoluto de los datos con respecto a su media.
+
+```{definition label=desviacion-abs}
+Si tenemos un conjunto de datos $x_1,...,x_n$ cuya media es $\overline{X}$, la __desviación absoluta__ se define como
+
+$$  
+\begin{equation}
+Dabs=\frac{\sum_{i=1}^n |x_i-\bar{X}|}{n}
+(\#eq:desvi-abs)
+\end{equation}
+$$
+```
+
+----
+
+Para realizar su cálculo en `R` combinaremos las funciones `sum()`,`abs()` (devuelve el valor absoluto) y `length()`.
+
+Como ejemplo calculemos la desviación absoluta a los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r}
+n<-length(sueldos)
+
+sum( abs( sueldos-mean(sueldos) ) )/n 
+
+mean( abs( sueldos-mean(sueldos) ) )
+```
+
+Con este resultado podemos concluir que los sueldos se dispersan de la media general `r mean(sueldos)`\$ en valor absoluto es `r mean( abs( sueldos-mean(sueldos) ) )` \$.
+
+----
+
+__2) Varianza (Promedio de la desviación cuadrática)__
+
+```{definition label=varianza}
+La **varianza** es la variabilidad de los datos con respecto a la media muestral $\bar X$, la denotaremos por $S^2$, se define como
+
+$$
+\begin{equation}
+S^2=\frac{\sum_{i=1}^n (x_i-\bar X)^2}{n-1}
+(\#eq:varianza)
+\end{equation}
+$$
+```
+
+Este valor es positivo, unicamente es cero cuando todos los valores de la muestra son iguales a un valor. Nos puede dar un valor muy grande y significaría que los datos están muy distantes de la media o que hay datos extremos (outliers).
+
+Otra forma de expresar el cálculo de la varianza es la siguiente:
+
+$$
+\begin{equation}
+\begin{array}{rl}
+S^2 & = \displaystyle \frac{\displaystyle \sum_{i=1}^n (x_i-\bar x)^2}{n-1}\\
+& = \displaystyle \frac{\displaystyle \sum_{i=1}^n (x_i^2-2x_i\bar x+ \bar x^2)}{n-1}\\
+& = \displaystyle \frac{\displaystyle \sum_{i=1}^n x_i^2-2\sum_{i=1}^n x_i \bar x+ \sum_{i=1}^n \bar x^2}{n-1}\\
+& = \displaystyle \frac{\displaystyle \sum_{i=1}^n x_i^2-2\bar x \sum_{i=1}^n x_i + n \bar x^2}{n-1}\\
+& = \displaystyle \frac{\displaystyle \sum_{i=1}^n x_i^2-2\bar x \frac{n\sum_{i=1}^n x_i}{n} + n \bar x^2}{n-1}\\
+& = \displaystyle \frac{\displaystyle \sum_{i=1}^n x_i^2-2\bar x n \bar x + n \bar x^2}{n-1}\\
+& = \displaystyle \frac{\displaystyle \sum_{i=1}^n x_i^2-2n\bar x^2+ n \bar x^2}{n-1}\\
+S^2 & = \displaystyle \frac{\displaystyle \sum_{i=1}^n x_i^2-n\bar x^2}{n-1}
+\end{array}
+(\#eq:varianza-2)
+\end{equation}
+$$
+
+Como dicho valor está en función de la muestra se le llama varianza muestral y es una aproximación a la varianza poblacional la cual denotaremos por $\sigma^2$. 
+
+La varianza poblacional también se puede definir en función del operador Esperanza como $\sigma^2=\mathbb{E}[(X-\bar{X})^2]$, lo estudiaremos con más detalle en la sección de _probabilidades y variables aleatorias_. 
+
+__3) Desviación estándar__
+
+```{definition label=desviacion-estandar}
+La __desviación estándar__ es la raíz cuadrada de la varianza
+
+$$
+\begin{equation}
+S=\sqrt{\frac{\displaystyle \sum_{i=1}^n (x_i-\bar X)^2}{n-1}}
+(\#eq:desviacion-estandar)
+\end{equation}    
+$$
+```
+
+Esta medida se expresa en las mismas unidades de la muestra.
+
+----
+
+En `R` usamos la función `var()` para calcular la varianza y la función `sd()` para calcular la desviación estándar.
+
+Veamos cuanto nos da la varianza y la desviación estándar a los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r}
+var(sueldos)# Varianza
+
+sd(sueldos) # Desviación estandar
+```
+
+----
+
+Los histogramas, que se hacen con una muestra de la población, son una aproximación a la distribución de la población. Una distribución muy estudiada y conocida es la distribución normal que tiene forma de campana y su función de densidad es
+
+$$f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}},\ \forall\ x\in \mathbb{R}$$
+
+Donde $\mu$ nos representa su media, y $\sigma^2$ la varianza. Es decir los datos se encuentran alrededor de la media y dispersos alrededor de la misma $\sigma$ unidades. Veamos a continuación la función de densidad de una distribución normal con media igual a cero y varianza igual a uno.
+
+```{r,echo=FALSE}
+x<-seq(-4,4,0.1)
+y <- dnorm(x,mean=0, sd=1)
+dat<-data.frame(x,y)
+f<-ggplot(data=dat, mapping = aes(x,y))+
+    geom_line(colour = "black")+
+    geom_segment(aes(x = 0, y = 0, xend = 0, yend = dnorm(0)), colour = "blue",linetype=2)+
+    geom_area(mapping = aes(x,y), fill = "blue",alpha = .2)+
+    labs(title = "Distribución Normal con media 0 y varianza 1", 
+         x="x",y="f(x)",caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+Esta distribución se estudiará con más detalle en la sección de _distribuciones continuas_.
+
+Existe una interpretación de la desviación estándar, ésta es la regla práctica del intervalo, dice que un 95% de los datos se encuentran a dos desviaciones estándar de la media. 
+
+Otra regla es la empírica, ésta establece que las siguientes propiedades se aplican a distribuciones normales:
+
+- Aproximadamente el 68% de todos los datos están dentro de una desviación estándar de la media.
+
+```{r, echo=FALSE}
+x<-seq(-4,4,0.01)
+y <- dnorm(x,mean=0, sd=1)
+dat<-data.frame(x,y)
+
+f<-ggplot(data=dat, mapping = aes(x,y))+
+    geom_area(mapping = aes(x= ifelse(x>=-1 & x <= 1,x,0),y), fill="blue",alpha = .3)+
+    geom_line(colour = "black")+
+    geom_segment(aes(x = 0, y = 0, xend = 0, yend = dnorm(0) ), colour = "black",linetype=2,size=.2)+
+    geom_segment(aes(x =-1, y = 0, xend =-1, yend = dnorm(-1)), colour = "blue",linetype=2,size=.2)+
+    geom_segment(aes(x = 1, y = 0, xend = 1, yend = dnorm(1) ), colour = "blue",linetype=2,size=.2)+
+    ylim(-0.05,0.43)+
+    annotate("text", x = 0.5, y = 0.1, label ="'68%'",parse = TRUE, alpha = .7,size=7)+
+    annotate("text", x = -1, y = -0.03, label ="'Media-1Sd'",parse = TRUE, alpha = .4)+
+    annotate("text", x = 0, y = -0.03, label ="Media",parse = TRUE, alpha = .4)+
+    annotate("text", x = 1, y = -0.03, label ="'Media+1Sd'",parse = TRUE, alpha = .4)+
+    labs(title = "Una Desviación Estándar de la Media", 
+         x=" ",y=" ",caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+- Aproximadamente el 95% de todos los datos están dentro de dos desviación estándar de la media.
+
+```{r, echo=FALSE}
+f<-ggplot(data=dat, mapping = aes(x,y))+
+    geom_area(mapping = aes(x= ifelse(x>=-2 & x <= 2,x,0),y), fill="springgreen4",alpha = .3)+
+    geom_line(colour = "black")+
+    geom_segment(aes(x = 0, y = 0, xend = 0, yend = dnorm(0) ), colour = "black",linetype=2,size=.2)+
+    geom_segment(aes(x =-2, y = 0, xend =-2, yend = dnorm(-2)), colour = "springgreen4",linetype=2,size=.2)+
+    geom_segment(aes(x = 2, y = 0, xend = 2, yend = dnorm(2) ), colour = "springgreen4",linetype=2,size=.2)+
+    ylim(-0.05,0.43)+
+    annotate("text", x = 0.7, y = 0.1, label ="'95%'",parse = TRUE, alpha = .7,size=7)+
+    annotate("text", x = -2, y = -0.03, label ="'Media-2Sd'",parse = TRUE, alpha = .4)+
+    annotate("text", x = 0, y = -0.03, label ="Media",parse = TRUE, alpha = .4)+
+    annotate("text", x = 2, y = -0.03, label ="'Media+2Sd'",parse = TRUE, alpha = .4)+
+    labs(title = "Dos Desviaciones Estándar de la Media", 
+         x=" ",y=" ",caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+- Aproximadamente el 99.7% de todos los datos están dentro de tres desviación estándar de la media.
+
+```{r, echo=FALSE}
+
+f<-ggplot(data=dat, mapping = aes(x,y))+
+    geom_area(mapping = aes(x= ifelse(x>=-3 & x <= 3,x,0),y), fill="orangered3",alpha = .3)+
+    geom_line(colour = "black")+
+    geom_segment(aes(x = 0, y = 0, xend = 0, yend = dnorm(0) ), colour = "black",linetype=2,size=.2)+
+    geom_segment(aes(x =-3, y = 0, xend =-3, yend = dnorm(-3)), colour = "orangered3",linetype=2,size=.2)+
+    geom_segment(aes(x = 3, y = 0, xend = 3, yend = dnorm(3) ), colour = "orangered3",linetype=2,size=.2)+
+    ylim(-0.05,0.43)+
+    annotate("text", x = 0.7, y = 0.1, label ="'99.7%'",parse = TRUE, alpha = .7,size=7)+
+    annotate("text", x = -3, y = -0.03, label ="'Media-3Sd'",parse = TRUE, alpha = .4)+
+    annotate("text", x = 0, y = -0.03, label ="Media",parse = TRUE, alpha = .4)+
+    annotate("text", x = 3, y = -0.03, label ="'Media+3Sd'",parse = TRUE, alpha = .4)+
+    labs(title = "Tres Desviaciones Estándar de la Media", 
+         x=" ",y=" ",caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+__4) El rango__
+
+Es una medida de dispersión de una muestra dada.
+
+```{definition label=rango}
+Se define **el rango** como la diferencia entre el número mayor y el menor de la muestra.
+
+Generalmente es un cálculo sencillo aunque no nos ofrece una idea de la concentración de los datos.
+
+$$
+\begin{equation}
+R= \displaystyle \max_{1\le i \le n}x_i-\min_{1\le i \le n}x_i
+(\#eq:rango)
+\end{equation}
+$$
+```
+
+Esta medida está sujeta a los valores extremos de los datos, por lo tanto no es muy robusta, ya que si tenemos datos muy alejados de lo común (no parecidos a las cantidades que puede tomar la mayoria de la muestra) no nos llevarán a sacar buenas conclusiones.
+
+----
+
+La manera de realizar el cálculo de esta medida en `R` es con la función `range()`, la cual nos da el valor máximo y el valor mínimo de los datos de la muestra, luego con la función `diff()` se calcula la diferencia de estos dos valores.
+
+A continuación calculemos el rango de los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r}
+mym<-range(sueldos)
+mym #Da el valor máximo y mínimo de los datos
+diff(mym) #Rango
+```
+
+#### Medidas de Posición o Orden
+
+__1) Percentiles__
+
+```{definition label=percentiles}
+Los percentiles son números que dividen el rango de valores en 100 unidades. 
+```
+
+Los percentiles son los valores tales que debajo de ellos se encuentra el porcentaje correspondiente de datos, por ejemplo el percentil 30 $(P_{30})$ indica que el $30\%$ de los datos se encuentran por debajo de el. 
+
+El nombre genérico de estas divisiones es __cuantiles__ o __fractiles__.
+
+Existen otros tipos de divisiones como los __cuartiles__ (dividen el rango el 4 unidades, estos son $25\%$, $50\%$, $75\%$) y los __deciles__ (dividen el rango en 10 unidades, es decir, $10\%$, $20\%$, $30\%$, $40\%$, $50\%$, $60\%$, $70\%$, $80\%$ y $90\%$).
+
+----
+
+Para su cálculo en `R` se usa la función `quantile()` donde el parámetro de entrada `probs` se usa para indicar que cuantil exacto se quiere calcular.
+
+Utilicemos esta función usando los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r}
+quantile(sueldos)#Por defecto calcula el mínimo, el primer cuartil,
+                 #la mediana, el tercer cuartil y el máximo
+
+quantile(sueldos,probs=0.10)
+
+quantile(sueldos,probs=c(0.2,0.4,0.6))
+```
+
+----
+
+Cuando no se conoce la distribución de los datos, se usa esta función para calcular las probabilidades asociadas a los datos.
+
+__2) Diagrama de caja__
+
+Los __diagramas de caja__ como su nombre lo indica, representan la muestra mediante una caja o rectángulo, donde los extremos de la caja corresponde al primer y tercer cuartil. En el centro de la caja está la mediana y fuera de la caja hay dos segmentos, llamados bigotes, que representan los datos más lejanos que estén a una distancia menor o igual a $1.5\times(P_{30}-P_{10})$, los puntos que no están dentro de ese rango se presentan como datos atípicos.
+
+Estos también son llamados __Boxplot__.
+
+----
+
+Dibujemos el diagrama de caja de los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r,eval=FALSE}
+dat<-data.frame(x=rep("sueldos",length(sueldos)),sueldos)
+ggplot(dat, aes(x,sueldos))+
+  geom_boxplot(fill="blue",alpha=0.5)+
+  labs(title = "Diagrama de Barra", 
+       x="x",y="Sueldos en millones de dólares")
+```
+
+```{r,echo=FALSE}
+dat<-data.frame(x=rep("sueldos",length(sueldos)),sueldos)
+f<-ggplot(dat, aes(x,sueldos))+
+    geom_boxplot(fill="blue",alpha=0.5)+
+    labs(title = "Diagrama de Barra", 
+         x="x",y="Sueldos en millones de dólares",
+         caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+La línea que está en el centro de la caja nos representa la mediana `r median(sueldos)` y los extremos son el primer cuartil `r quantile(sueldos,probs=0.25)` y tercer cuartil `r quantile(sueldos,probs=0.75)`. También observamos un dato atípico.
+
+----
+
+#### Medidas de forma
+
+Las medidas de forma están asociados a la forma que toman los histogramas, o más formalmente las distribuciones de los datos, nos ayudan a saber hacia donde se agrupan los datos, es una manera de ver como están dispersos con respecto a la distribución. Vamos a estudiar el Sesgo y la curtosis.
+
+__1) Sesgo (Asimetría)__
+
+Antes de introducir la definición de sesgo tenemos que establecer cuando una función de distribución es simétrica y esto sucede cuando hay igual cantidad de datos a la derecha y a la izquierda de la media de los datos, una distribución simétrica es la distribución Normal.
+
+Cuando la función es simétrica la media, la moda y la mediana son iguales.
+
+Sabiendo cuando una densidad es simétrica, podemos definir el **sesgo**.
+
+```{definition label=sesgo}
+El __sesgo__ se define como el grado se asimetría de una distribución, es decir, que tan dispersa está la función de ser simétrica, viene dado por la fórmula siguiente:
+
+$$
+\begin{equation}
+\text{Sesgo}= \frac{1}{n}\ \frac{\displaystyle \sum_{i=1}^n (x_i-\bar X)^3}{S^3}
+(\#eq:sesgo)
+\end{equation}
+$$
+```
+
+Existen dos tipos de sesgos:
+
+- __Sesgo izquierdo__: Una distribución se dice que está sesgada a la izquierda o que tiene sesgo negativo si la mediana y la media se encuentran a la izquierda de la moda. Las distribuciones con este sesgo tienen una cola larga por la izquierda. 
+
+- __Sesgo derecho__: La distribución es sesgada a la derecha cuando la mediana y la media están a la derecha de la moda, tienen una cola larga a la derecha.
+
+Si el valor que toma es negativo estará sesgada a la izquierda, si es positivo estará sesgada a la derecha y en caso de no existir sesgo dicho valor dara cero.
+
+----
+
+Para calcular el sesgo podemos usar la función `skewness()` del paquete `e1071`, o la función `skewness()` del paquete `modeest`, o simplemente combinar las funciones `mean(), sum(), length(), sd()` para replicar la fórmula \@ref(eq:sesgo).
+
+Veamos cual es el sesgo de los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r}
+sum((sueldos-mean(sueldos))^3)/(length(sueldos)*sd(sueldos)^3)
+e1071::skewness(sueldos)
+moments::skewness(sueldos)
+modeest::skewness(sueldos)
+```
+
+```{r,echo=FALSE}
+x<-seq(0,8,0.01)
+Simetrica<-dnorm(x,4,0.5)
+Izquierdo<-df(-x+8,df1=25,df2=26)
+Derecho<-df(x,df1=25,df2=30)
+dat<-data.frame(x,Simetrica,Izquierdo,Derecho)
+
+f<-ggplot(dat, aes(x=x))+
+    geom_line(aes(y=Simetrica,colour="Simétrica"))+
+    geom_area(mapping = aes(x,Simetrica), fill = "blue",alpha = .2)+
+    geom_line(aes(y=Izquierdo,colour="Izquierdo"))+
+    geom_area(mapping = aes(x,Izquierdo), fill = "green",alpha = .2)+
+    geom_line(aes(y=Derecho,colour="Derecho"))+
+    geom_area(mapping = aes(x,Derecho), fill = "red",alpha = .2)+
+    scale_colour_manual("",values = c("Simétrica"="blue", 
+                                      "Izquierdo"="green",
+                                      "Derecho"="red"))+
+    labs( title = "Sesgo",x=" ",y=" ",caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+__2) Curtosis (Pico)__
+
+Esta medida está asociada a la forma punteada (agudeza o achatamiento) de la distribución. Existen tres tipos de Curtosis
+
+- __Leptocúrtica__: Estas distribuciones tienen picos muy altos, en este caso los datos están muy próximos a la media de los datos, la desviación estándar es muy pequeña. En este caso la curtosis nos da un valor positivo.
+
+- __Platicúrtica__: Su forma es muy achatada, los datos están más alejados de la media. Esta situación se nos presenta cuando el valor de la curtosis es un valor negativo.
+
+- __Mesocúrtica__: En este caso la distribución no es muy aguda ni muy achatada. En este último caso el valor de la curtosis es igual a cero.
+
+```{r,echo=FALSE}
+x<-seq(-5,5,0.01)
+Leptocurtica<-dnorm(x,0,0.5)
+Platicurtica<-dnorm(x,0,2)
+Mesocurtica<-dnorm(x,0,1)
+dat<-data.frame(x,Leptocurtica,Platicurtica,Mesocurtica)
+
+f<-ggplot(dat, aes(x=x))+
+    geom_line(aes(y=Mesocurtica,colour="Mesocúrtica"))+
+    geom_area(mapping = aes(x,Mesocurtica), fill = "red",alpha = .2)+
+    geom_line(aes(y=Leptocurtica,colour="Leptocúrtica"))+
+    geom_area(mapping = aes(x,Leptocurtica), fill = "blue",alpha = .2)+
+    geom_line(aes(y=Platicurtica,colour="Platicúrtica"))+
+    geom_area(mapping = aes(x,Platicurtica), fill = "green",alpha = .2)+
+    xlim(-5,5)+
+    scale_colour_manual("",values = c("Leptocúrtica"="blue", 
+                                      "Platicúrtica"="green",
+                                      "Mesocúrtica"="red"))+
+    labs( title = "Curtosis",x=" ",y=" ",caption = "http://synergy.vision/" )+ vision
+credits(f)
+```
+
+Una forma de medir la curtosis es con la siguiente fórmula
+
+$$
+\begin{equation}
+\text{Curtosis}= \frac{1}{n}\ \frac{\displaystyle \sum_{i=1}^n (x_i-\bar X)^4}{S^4}
+(\#eq:curtosis1)
+\end{equation}
+$$
+
+Donde $S$ es la desviación estándar de la muestra y $\bar X$ la media.
+
+Existe una forma alternativa de definir la curtosis, muchas veces llamado "exceso de curtosis", ésta se basa en que la kurtosis de una distribución normal es 3, así tendríamos
+
+$$
+\begin{equation}
+\text{Curtosis}= \frac{1}{n}\ \frac{\displaystyle\sum_{i=1}^n (x_i-\bar X)^4}{S^4}-3
+(\#eq:curtosis2)
+\end{equation}
+$$
+
+----
+
+Para su cálculo en `R` podemos usar la función `kurtosis()` del paquete `moments`, o combinar las funciones `mean()`, `length()` y `sd()` para generar la fórmula \@ref(eq:curtosis1). Y para el cálculo del exceso de curtosis podemos usar la función `kurtosis()` del paquete `e1071` o simplemente combinar las funciones `mean()`, `length()` y `sd()` para reproducir la ecuación \@ref(eq:curtosis2).
+
+Como ejemplo calculemos la curtoris y el exceso de curtosis de los datos del ejemplo \@ref(exm:ejem-sueldo-ing).
+
+```{r}
+sum((sueldos-mean(sueldos))^4)/(length(sueldos)*sd(sueldos)^4)-3
+e1071::kurtosis(sueldos) #exceso de curtosis
+sum((sueldos-mean(sueldos))^4)/(length(sueldos)*sd(sueldos)^4)
+moments::kurtosis(sueldos)
+```
